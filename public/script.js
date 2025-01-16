@@ -1,100 +1,159 @@
-let teams = [];
-let players = [];
-let draftBoard = [];
+let selectedTeam = null;
+let selectedPlayer = null;
+let timer;
+const countdownDuration = 5 * 60;
 
-// Fetch teams from the server
-function fetchTeams() {
-    fetch('http://localhost:3000/teams')
-        .then(response => response.json())
-        .then(data => {
-            console.log('Teams:', data);
-            teams = data;
-            renderTeams();
-        })
-        .catch(err => console.error('Error fetching teams:', err));
-}
+document.addEventListener('DOMContentLoaded', () => {
+    const enterDraftButton = document.getElementById('enter-draft');
+    const resetDraftButton = document.getElementById('reset-draft');
+    const draftPlayerButton = document.getElementById('draft-player-button');
+    const entryPage = document.getElementById('entry-page');
+    const draftPage = document.getElementById('draft-page');
+    const countdownTimer = document.getElementById('countdown-timer');
 
-// Fetch players from the server
-function fetchPlayers() {
-    fetch('http://localhost:3000/players')
-        .then(response => response.json())
-        .then(data => {
-            console.log('Players:', data);
-            players = data;
-            renderPlayers();
-        })
-        .catch(err => console.error('Error fetching players:', err));
-}
+    // Fetch teams and render buttons
+    fetchTeams();
 
-// Draft a player and update data
-function draftPlayer(teamId, playerId) {
-    fetch('http://localhost:3000/draft', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ teamId, playerId })
-    })
-    .then(() => {
-        fetchTeams();
+    enterDraftButton.addEventListener('click', () => {
+        if (!selectedTeam) {
+            alert('Please select a team first!');
+            return;
+        }
+        switchToDraftPage();
+    });
+
+    resetDraftButton.addEventListener('click', () => {
+        resetDraft();
+    });
+
+    draftPlayerButton.addEventListener('click', () => {
+        if (!selectedPlayer) {
+            alert('Please select a player first!');
+            return;
+        }
+        draftPlayer(selectedPlayer);
+    });
+
+    function fetchTeams() {
+        fetch('/teams')
+            .then(response => response.json())
+            .then(data => renderTeamButtons(data))
+            .catch(err => console.error(err));
+    }
+
+    function renderTeamButtons(teams) {
+        const teamButtonsDiv = document.getElementById('team-buttons');
+        teamButtonsDiv.innerHTML = '';
+        teams.forEach(team => {
+            const button = document.createElement('button');
+            button.textContent = team.name;
+            button.className = 'team-button';
+            button.onclick = (event) => selectTeam(team.id, event);
+            teamButtonsDiv.appendChild(button);
+        });
+    }
+
+    function selectTeam(teamId, event) {
+        selectedTeam = teamId;
+        document.querySelectorAll('.team-button').forEach(button => button.classList.remove('selected'));
+        event.target.classList.add('selected');
+
+        // Set selected team name
+        const selectedTeamName = event.target.textContent;
+        document.getElementById('selected-team-name').textContent = selectedTeamName;
+    }
+
+    function switchToDraftPage() {
+        entryPage.classList.add('hidden');
+        draftPage.classList.remove('hidden');
+        startCountdown();
         fetchPlayers();
-        fetchDraftBoard();
-    })
-    .catch(err => console.error('Error drafting player:', err));
-}
+    }
 
-// Fetch the draft board
-function fetchDraftBoard() {
-    fetch('http://localhost:3000/draft-board')
+    function resetDraft() {
+        selectedTeam = null;
+        selectedPlayer = null;
+        // Additional logic for resetting the database can be added here
+        console.log('Draft reset');
+        document.querySelectorAll('.team-button').forEach(button => button.classList.remove('selected'));
+        entryPage.classList.remove('hidden');
+        draftPage.classList.add('hidden');
+        clearInterval(timer);
+        countdownTimer.textContent = 'Time Remaining: 5:00';
+        document.getElementById('selected-team-name').textContent = '';
+        document.getElementById('drafted-players').innerHTML = '';
+    }
+
+    function startCountdown() {
+        let timeRemaining = countdownDuration;
+        updateTimerDisplay(timeRemaining);
+
+        timer = setInterval(() => {
+            timeRemaining--;
+            if (timeRemaining <= 0) {
+                clearInterval(timer);
+                alert('Time expired! No pick selected.');
+            }
+            updateTimerDisplay(timeRemaining);
+        }, 1000);
+    }
+
+    function updateTimerDisplay(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        countdownTimer.textContent = `Time Remaining: ${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
+    function fetchPlayers() {
+        fetch('/players')
+            .then(response => response.json())
+            .then(data => renderPlayers(data))
+            .catch(err => console.error(err));
+    }
+
+    function renderPlayers(players) {
+        const playersSection = document.getElementById('players');
+        playersSection.innerHTML = '';
+        players.forEach(player => {
+            const playerDiv = document.createElement('div');
+            playerDiv.className = 'player';
+            playerDiv.textContent = `${player.prospect} (${player.position}) - ${player.college}`;
+            playerDiv.onclick = () => selectPlayer(player);
+            playersSection.appendChild(playerDiv);
+        });
+    }
+
+    function selectPlayer(player) {
+        selectedPlayer = player;
+        document.querySelectorAll('.player').forEach(playerDiv => playerDiv.classList.remove('selected'));
+        event.target.classList.add('selected');
+    }
+
+    function draftPlayer(player) {
+        fetch('/draft', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ teamId: selectedTeam, playerId: player.id })
+        })
         .then(response => response.json())
         .then(data => {
-            console.log('Draft Board:', data);
-            draftBoard = data;
-            renderDraftBoard();
+            if (data.success) {
+                const draftedPlayersList = document.getElementById('drafted-players');
+                const playerItem = document.createElement('li');
+                playerItem.textContent = `${player.prospect} (${player.position})`;
+                draftedPlayersList.appendChild(playerItem);
+
+                // Remove the drafted player from the list
+                const playersSection = document.getElementById('players');
+                playersSection.removeChild(document.querySelector(`.player[data-id="${player.id}"]`));
+
+                selectedPlayer = null;
+            } else {
+                alert('Failed to draft player.');
+            }
         })
-        .catch(err => console.error('Error fetching draft board:', err));
-}
-
-// Render teams
-function renderTeams() {
-    const teamsDiv = document.getElementById('teams');
-    teamsDiv.innerHTML = '';
-    teams.forEach(team => {
-        const teamDiv = document.createElement('div');
-        teamDiv.className = 'team';
-        teamDiv.innerHTML = `<h2><img src="${team.logo}" alt="${team.name}"> ${team.name}</h2>`;
-        teamsDiv.appendChild(teamDiv);
-    });
-}
-
-// Render players
-function renderPlayers() {
-    const playersDiv = document.getElementById('players');
-    playersDiv.innerHTML = '<h2>Available Players</h2>';
-    players.forEach(player => {
-        const playerDiv = document.createElement('div');
-        playerDiv.className = 'player';
-        playerDiv.innerHTML = `
-            ${player.prospect} (${player.position}) - Speed: ${player.speed}, Strength: ${player.strength}, Mental Processing: ${player.mental_processing}
-            ${teams.map(
-                team => `<button onclick="draftPlayer(${team.id}, ${player.id})">Draft to ${team.name}</button>`
-            ).join('')}
-        `;
-        playersDiv.appendChild(playerDiv);
-    });
-}
-
-// Render draft board
-function renderDraftBoard() {
-    const draftBoardDiv = document.getElementById('draft-board');
-    draftBoardDiv.innerHTML = '<h2>Draft Board</h2>';
-    draftBoard.forEach(pick => {
-        const pickDiv = document.createElement('div');
-        pickDiv.className = 'pick';
-        pickDiv.innerHTML = `${pick.player} drafted by ${pick.team}`;
-        draftBoardDiv.appendChild(pickDiv);
-    });
-}
-
-// Initialize the app
-fetchTeams();
-fetchPlayers();
-fetchDraftBoard();
+        .catch(err => console.error(err));
+    }
+});

@@ -39,76 +39,71 @@ const db = new sqlite3.Database(dbPath, (err) => {
 
         console.log('Database schema created.');
 
-   // Seed initial data (improved)
-db.serialize(() => {
-    db.run("DELETE FROM teams");
-    db.run("DELETE FROM players");
-    db.run("DELETE FROM picks");
-    db.run(`INSERT INTO teams (name, logo) VALUES 
-        ('Arizona Cardinals', 'arizona-cardinals-logo.png'), 
-        ('Atlanta Falcons', 'atlanta-falcons-logo.png'), 
-        ('Baltimore Ravens', 'baltimore-ravens-logo.png'), 
-        ('Buffalo Bills', 'buffalo-bills-logo.png'), 
-        ('Carolina Panthers', 'carolina-panthers-logo.png'), 
-        ('Chicago Bears', 'chicago-bears-logo.png'), 
-        ('Cincinnati Bengals', 'cincinnati-bengals-logo.png'), 
-        ('Cleveland Browns', 'cleveland-browns-logo.png'), 
-        ('Dallas Cowboys', 'dallas-cowboys-logo.png'), 
-        ('Denver Broncos', 'denver-broncos-logo.png'), 
-        ('Detroit Lions', 'detroit-lions-logo.png'), 
-        ('Green Bay Packers', 'green-bay-packers-logo.png'), 
-        ('Houston Texans', 'houston-texans-logo.png'), 
-        ('Indianapolis Colts', 'indianapolis-colts-logo.png'), 
-        ('Jacksonville Jaguars', 'jacksonville-jaguars-logo.png'), 
-        ('Kansas City Chiefs', 'kansas-city-chiefs-logo.png'), 
-        ('Las Vegas Raiders', 'las-vegas-raiders-logo.png'), 
-        ('Los Angeles Chargers', 'los-angeles-chargers-logo.png'), 
-        ('Los Angeles Rams', 'los-angeles-rams-logo.png'), 
-        ('Miami Dolphins', 'miami-dolphins-logo.png'), 
-        ('Minnesota Vikings', 'minnesota-vikings-logo.png'), 
-        ('New England Patriots', 'new-england-patriots-logo.png'), 
-        ('New Orleans Saints', 'new-orleans-saints-logo.png'), 
-        ('New York Giants', 'new-york-giants-logo.png'), 
-        ('New York Jets', 'new-york-jets-logo.png'), 
-        ('Philadelphia Eagles', 'philadelphia-eagles-logo.png'), 
-        ('Pittsburgh Steelers', 'pittsburgh-steelers-logo.png'), 
-        ('San Francisco 49ers', 'san-francisco-49ers-logo.png'), 
-        ('Seattle Seahawks', 'seattle-seahawks-logo.png'), 
-        ('Tampa Bay Buccaneers', 'tampa-bay-buccaneers-logo.png'), 
-        ('Tennessee Titans', 'tennessee-titans-logo.png'), 
-        ('Washington Commanders', 'washington-commanders-logo.png')`);
+        // Seed initial data
+        db.run("DELETE FROM teams");
+        db.run("DELETE FROM players");
+        db.run("DELETE FROM picks");
+        db.run(`INSERT INTO teams (name, logo) VALUES 
+            ('Arizona Cardinals', 'arizona-cardinals-logo.png'), 
+            ('Atlanta Falcons', 'atlanta-falcons-logo.png'), 
+            ('Baltimore Ravens', 'baltimore-ravens-logo.png'), 
+            ('Buffalo Bills', 'buffalo-bills-logo.png'), 
+            ('Carolina Panthers', 'carolina-panthers-logo.png'), 
+            ('Chicago Bears', 'chicago-bears-logo.png'), 
+            ('Cincinnati Bengals', 'cincinnati-bengals-logo.png'), 
+            ('Cleveland Browns', 'cleveland-browns-logo.png'), 
+            ('Dallas Cowboys', 'dallas-cowboys-logo.png'), 
+            ('Denver Broncos', 'denver-broncos-logo.png'), 
+            ('Detroit Lions', 'detroit-lions-logo.png'), 
+            ('Green Bay Packers', 'green-bay-packers-logo.png'), 
+            ('Houston Texans', 'houston-texans-logo.png'), 
+            ('Indianapolis Colts', 'indianapolis-colts-logo.png'), 
+            ('Jacksonville Jaguars', 'jacksonville-jaguars-logo.png'), 
+            ('Kansas City Chiefs', 'kansas-city-chiefs-logo.png'), 
+            ('Las Vegas Raiders', 'las-vegas-raiders-logo.png'), 
+            ('Los Angeles Chargers', 'los-angeles-chargers-logo.png'), 
+            ('Los Angeles Rams', 'los-angeles-rams-logo.png'), 
+            ('Miami Dolphins', 'miami-dolphins-logo.png'), 
+            ('Minnesota Vikings', 'minnesota-vikings-logo.png'), 
+            ('New England Patriots', 'new-england-patriots-logo.png'), 
+            ('New Orleans Saints', 'new-orleans-saints-logo.png'), 
+            ('New York Giants', 'new-york-giants-logo.png'), 
+            ('New York Jets', 'new-york-jets-logo.png'), 
+            ('Philadelphia Eagles', 'philadelphia-eagles-logo.png'), 
+            ('Pittsburgh Steelers', 'pittsburgh-steelers-logo.png'), 
+            ('San Francisco 49ers', 'san-francisco-49ers-logo.png'), 
+            ('Seattle Seahawks', 'seattle-seahawks-logo.png'), 
+            ('Tampa Bay Buccaneers', 'tampa-bay-buccaneers-logo.png'), 
+            ('Tennessee Titans', 'tennessee-titans-logo.png'), 
+            ('Washington Commanders', 'washington-commanders-logo.png')`);
 
-
-
-            const players = parsePlayersFile();
-            const stmt = db.prepare(
-                `INSERT INTO players 
-                (rank, cng, prospect, college, position, height, weight, eligibility, dr, speed, strength, mental_processing) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+        const players = parsePlayersFile();
+        const stmt = db.prepare(
+            `INSERT INTO players 
+            (rank, cng, prospect, college, position, height, weight, eligibility, dr, speed, strength, mental_processing) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+        );
+        players.forEach(player => {
+            stmt.run(
+                player.Rank,
+                player.CNG,
+                player.Prospect,
+                player.College,
+                player.P1,
+                player.Ht,
+                player.Wt,
+                player.Elig,
+                player.DR,
+                Math.floor(Math.random() * 100),
+                Math.floor(Math.random() * 100),
+                Math.floor(Math.random() * 100)
             );
-            players.forEach(player => {
-                stmt.run(
-                    player.Rank,
-                    player.CNG,
-                    player.Prospect,
-                    player.College,
-                    player.P1,
-                    player.Ht,
-                    player.Wt,
-                    player.Elig,
-                    player.DR,
-                    Math.floor(Math.random() * 100),
-                    Math.floor(Math.random() * 100),
-                    Math.floor(Math.random() * 100)
-                );
-            });
-            stmt.finalize();
         });
-        console.log('Initial data seeded.');
+        stmt.finalize();
     });
 });
 
-// API Endpoints:
+// API Endpoints
 app.get('/teams', (req, res) => {
     db.all("SELECT * FROM teams", (err, rows) => {
         if (err) {
@@ -129,7 +124,6 @@ app.get('/players', (req, res) => {
     });
 });
 
-// Draft player
 app.post('/draft', (req, res) => {
     const { teamId, playerId } = req.body;
     db.run("INSERT INTO picks (team_id, player_id) VALUES (?, ?)", [teamId, playerId], (err) => {
@@ -141,7 +135,6 @@ app.post('/draft', (req, res) => {
     });
 });
 
-// Get draft board
 app.get('/draft-board', (req, res) => {
     db.all(
         `SELECT players.prospect AS player, teams.name AS team
@@ -158,7 +151,6 @@ app.get('/draft-board', (req, res) => {
     );
 });
 
-// Serve the index.html file
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
