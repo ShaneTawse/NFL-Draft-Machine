@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025/2026 NFL Draft Machine</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Entry Page -->
+    <section id="entry-page" class="visible">
+        <header>
+            <h1>2025/2026 NFL Draft Machine</h1>
+        </header>
+        <div class="button-container">
+            <button id="enter-draft">Enter Draft</button>
+            <button id="reset-draft">Reset Draft</button>
+        </div>
+        <div class="team-selector">
+            <h2>Select Your Team:</h2>
+            <div id="team-buttons"></div>
+        </div>
+    </section>
+
+    <!-- Draft Page -->
+    <section id="draft-page" class="hidden">
+        <header>
+            <h1>Draft Time!</h1>
+            <div id="countdown-timer">Time Remaining: 5:00</div>
+        </header>
+        <main>
+            <div id="team-info">
+                <h2 id="selected-team-name"></h2>
+                <h3>Team Needs:</h3>
+                <ul id="team-needs">
+                    <li>LB</li>
+                    <li>DE</li>
+                    <li>QB</li>
+                </ul>
+                <h3>Drafted Players:</h3>
+                <ul id="drafted-players"></ul>
+            </div>
+            <div id="draft-content">
+                <section id="players"></section>
+                <button id="draft-player-button">Draft Me</button>
+            </div>
+        </main>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
