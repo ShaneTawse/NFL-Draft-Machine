@@ -1,104 +1,88 @@
+/* General Styles */
 body {
     font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
     margin: 0;
     padding: 0;
 }
 
-h1, h2 {
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 15px 0;
     text-align: center;
+    font-size: 2em;
 }
 
-.button-container {
+.section {
     display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin: 20px 0;
-}
-
-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.team-selector {
-    text-align: center;
-    margin: 20px;
-}
-
-.team-selector #team-buttons {
-    display: flex;
+    gap: 20px;
     flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 20px auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.team-button {
-    padding: 10px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
+#team-info,
+#draft-content,
+#players,
+#drafted-players {
+    flex: 1;
+    min-width: 250px;
+    background-color: #fff;
+    padding: 15px;
     border-radius: 5px;
-}
-
-.team-button.selected {
-    background-color: #28a745;
-}
-
-.hidden {
-    display: none;
-}
-
-.visible {
-    display: block;
-}
-
-#countdown-timer {
-    text-align: center;
-    margin-bottom: 20px; /* Add space below the timer */
-}
-
-#draft-page main {
-    display: flex;
-    justify-content: center;
-    gap: 20px; /* Add space between elements in the draft page */
-}
-
-#team-info {
-    width: 200px;
-}
-
-#draft-content {
-    flex-grow: 1;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 #players {
-    margin-bottom: 20px; /* Add space between the player list and the button */
-    display: flex;
-    justify-content: center; /* Center the player list */
-    flex-direction: column; /* Arrange players vertically */
-    gap: 10px;
+    max-height: 500px;
+    overflow-y: auto;
 }
 
-.player {
-    padding: 10px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
+button {
+    display: block;
+    margin: 10px 0;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
+    font-size: 1em;
+}
+
+button:hover {
+    background-color: #05f832;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Drafted Players List */
+#drafted-list {
+    list-style-type:decimal;
+    border: #007BFF;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+#drafted-list li {
+    padding: 5px;
+    background-color: #d0d6d0;
+    border: 1px solid #3693ea;
+    margin-bottom: 5px;
     border-radius: 5px;
 }
 
-.player:hover,
-.player.selected {
-    background-color: #007BFF;
-    color: white;
-}
-
-#draft-player-button {
-    align-self: flex-end; /* Align the button to the right side */
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
+.selected {
+    background-color:#07f627 !important;
+    color: #fff !important;
 }

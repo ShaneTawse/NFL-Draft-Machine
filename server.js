@@ -33,9 +33,33 @@ const db = new sqlite3.Database(dbPath, (err) => {
 
     // Initialize the database
     db.serialize(() => {
-        db.run(`CREATE TABLE IF NOT EXISTS teams (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, logo TEXT NOT NULL)`);
-        db.run(`CREATE TABLE IF NOT EXISTS players (id INTEGER PRIMARY KEY AUTOINCREMENT, rank INTEGER NOT NULL, cng TEXT, prospect TEXT NOT NULL, college TEXT, position TEXT NOT NULL, height TEXT, weight TEXT, eligibility TEXT, dr TEXT, speed INTEGER, strength INTEGER, mental_processing INTEGER)`);
-        db.run(`CREATE TABLE IF NOT EXISTS picks (id INTEGER PRIMARY KEY AUTOINCREMENT, team_id INTEGER NOT NULL, player_id INTEGER NOT NULL, FOREIGN KEY(team_id) REFERENCES teams(id), FOREIGN KEY(player_id) REFERENCES players(id))`);
+        db.run(`CREATE TABLE IF NOT EXISTS teams (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            logo TEXT NOT NULL
+        )`);
+        db.run(`CREATE TABLE IF NOT EXISTS players (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            rank INTEGER NOT NULL,
+            cng TEXT,
+            prospect TEXT NOT NULL,
+            college TEXT,
+            position TEXT NOT NULL,
+            height TEXT,
+            weight TEXT,
+            eligibility TEXT,
+            dr TEXT,
+            speed INTEGER,
+            strength INTEGER,
+            mental_processing INTEGER
+        )`);
+        db.run(`CREATE TABLE IF NOT EXISTS picks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            team_id INTEGER NOT NULL,
+            player_id INTEGER NOT NULL,
+            FOREIGN KEY(team_id) REFERENCES teams(id),
+            FOREIGN KEY(player_id) REFERENCES players(id)
+        )`);
 
         console.log('Database schema created.');
 
@@ -152,7 +176,7 @@ app.get('/draft-board', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
 app.listen(PORT, () => {

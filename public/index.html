@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFL Mock Draft</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        NFL Mock Draft Simulator 2025/2026
+    </header>
+
+    <div class="section" id="draft-section">
+        <div id="team-info">
+            <h2>Team Info</h2>
+            <ul>
+                <li id="selected-team">Selected Team: None</li>
+                <li id="draft-order">Draft Order: Loading...</li>
+            </ul>
+        </div>
+
+        <div id="players">
+            <h2>Players</h2>
+            <div id="player-list">
+                <!-- Players will be dynamically loaded here -->
+            </div>
+        </div>
+
+        <div id="draft-content">
+            <h2>Draft Console</h2>
+            <div id="countdown-timer">Time Remaining: 05:00</div>
+            <button id="draft-player" disabled>Draft Player</button>
+            <button id="reset-draft">Reset Draft</button>
+        </div>
+
+        <div id="drafted-players">
+            <h2>Drafted Players</h2>
+            <ul id="drafted-list">
+                <!-- Drafted players will be shown here -->
+            </ul>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

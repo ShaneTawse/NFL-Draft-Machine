@@ -1,177 +1,109 @@
 let selectedTeam = null;
 let selectedPlayer = null;
-let timer;
-const countdownDuration = 5 * 60;
-let draftOrder = []; // Add this line to keep track of the draft order
-let currentTeamIndex = 0; // Add this line to keep track of the current team in the draft order
+let countdownTimer;
+const draftDuration = 300; // 5 minutes in seconds
+let currentTime = draftDuration;
 
 document.addEventListener('DOMContentLoaded', () => {
-    const enterDraftButton = document.getElementById('enter-draft');
-    const resetDraftButton = document.getElementById('reset-draft');
-    const draftPlayerButton = document.getElementById('draft-player-button');
-    const entryPage = document.getElementById('entry-page');
-    const draftPage = document.getElementById('draft-page');
-    const countdownTimer = document.getElementById('countdown-timer');
+    loadTeams();
+    loadPlayers();
 
-    // Fetch teams and render buttons
-    fetchTeams();
+    document.getElementById('draft-player').addEventListener('click', draftPlayer);
+    document.getElementById('reset-draft').addEventListener('click', resetDraft);
 
-    enterDraftButton.addEventListener('click', () => {
-        if (!selectedTeam) {
-            alert('Please select a team first!');
-            return;
-        }
-        switchToDraftPage();
-    });
+    startCountdown();
+});
 
-    resetDraftButton.addEventListener('click', () => {
-        resetDraft();
-    });
+function loadTeams() {
+    fetch('/teams')
+        .then((res) => res.json())
+        .then((teams) => {
+            const teamInfo = document.getElementById('team-info');
+            const draftOrder = document.createElement('ul');
 
-    draftPlayerButton.addEventListener('click', () => {
-        if (!selectedPlayer) {
-            alert('Please select a player first!');
-            return;
-        }
-        draftPlayer(selectedPlayer);
-    });
+            teams.forEach((team) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = team.name;
+                draftOrder.appendChild(listItem);
 
-    function fetchTeams() {
-        fetch('/teams')
-            .then(response => response.json())
-            .then(data => {
-                draftOrder = data; // Add this line to populate the draft order
-                renderTeamButtons(data);
-            })
-            .catch(err => console.error(err));
-    }
+                listItem.addEventListener('click', () => {
+                    selectedTeam = team;
+                    document.getElementById('selected-team').textContent = `Selected Team: ${team.name}`;
+                    toggleDraftButton();
+                });
+            });
 
-    function renderTeamButtons(teams) {
-        const teamButtonsDiv = document.getElementById('team-buttons');
-        teamButtonsDiv.innerHTML = '';
-        teams.forEach(team => {
-            const button = document.createElement('button');
-            button.textContent = team.name;
-            button.className = 'team-button';
-            button.onclick = (event) => selectTeam(team.id, event);
-            teamButtonsDiv.appendChild(button);
+            document.getElementById('draft-order').innerHTML = '';
+            document.getElementById('draft-order').appendChild(draftOrder);
         });
-    }
+}
 
-    function selectTeam(teamId, event) {
-        selectedTeam = teamId;
-        document.querySelectorAll('.team-button').forEach(button => button.classList.remove('selected'));
-        event.target.classList.add('selected');
+function loadPlayers() {
+    fetch('/players')
+        .then((res) => res.json())
+        .then((players) => {
+            const playerList = document.getElementById('player-list');
+            playerList.innerHTML = '';
 
-        // Set selected team name
-        const selectedTeamName = event.target.textContent;
-        document.getElementById('selected-team-name').textContent = selectedTeamName;
-    }
+            players.forEach((player) => {
+                const button = document.createElement('button');
+                button.textContent = `${player.rank}: ${player.prospect}`;
+                button.addEventListener('click', () => {
+                    selectedPlayer = player;
+                    toggleDraftButton();
+                });
 
-    function switchToDraftPage() {
-        entryPage.classList.add('hidden');
-        draftPage.classList.remove('hidden');
-        startCountdown();
-        fetchPlayers();
-    }
-
-    function resetDraft() {
-        selectedTeam = null;
-        selectedPlayer = null;
-        currentTeamIndex = 0; // Add this line to reset the current team index
-        // Additional logic for resetting the database can be added here
-        console.log('Draft reset');
-        document.querySelectorAll('.team-button').forEach(button => button.classList.remove('selected'));
-        entryPage.classList.remove('hidden');
-        draftPage.classList.add('hidden');
-        clearInterval(timer);
-        countdownTimer.textContent = 'Time Remaining: 5:00';
-        document.getElementById('selected-team-name').textContent = '';
-        document.getElementById('drafted-players').innerHTML = '';
-    }
-
-    function startCountdown() {
-        let timeRemaining = countdownDuration;
-        updateTimerDisplay(timeRemaining);
-
-        timer = setInterval(() => {
-            timeRemaining--;
-            if (timeRemaining <= 0) {
-                clearInterval(timer);
-                alert('Time expired! No pick selected.');
-                resetClockAndSwitchTeam(); // Add this line to reset the clock and switch to the next team
-            }
-            updateTimerDisplay(timeRemaining);
-        }, 1000);
-    }
-
-    function updateTimerDisplay(seconds) {
-        const minutes = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        countdownTimer.textContent = `Time Remaining: ${minutes}:${secs < 10 ? '0' : ''}${secs}`;
-    }
-
-    function resetClockAndSwitchTeam() {
-        clearInterval(timer);
-        startCountdown();
-        currentTeamIndex = (currentTeamIndex + 1) % draftOrder.length;
-        const nextTeam = draftOrder[currentTeamIndex];
-        document.getElementById('selected-team-name').textContent = nextTeam.name;
-        selectedTeam = nextTeam.id;
-    }
-
-    function fetchPlayers() {
-        fetch('/players')
-            .then(response => response.json())
-            .then(data => renderPlayers(data))
-            .catch(err => console.error(err));
-    }
-
-    function renderPlayers(players) {
-        const playersSection = document.getElementById('players');
-        playersSection.innerHTML = '';
-        players.forEach(player => {
-            const playerDiv = document.createElement('div');
-            playerDiv.className = 'player';
-            playerDiv.dataset.id = player.id; // Add this line to set the player ID as a data attribute
-            playerDiv.textContent = `${player.prospect} (${player.position}) - ${player.college}`;
-            playerDiv.onclick = (event) => selectPlayer(player, event); // Add event parameter
-            playersSection.appendChild(playerDiv);
+                playerList.appendChild(button);
+            });
         });
-    }
+}
 
-    function selectPlayer(player, event) {
-        selectedPlayer = player;
-        document.querySelectorAll('.player').forEach(playerDiv => playerDiv.classList.remove('selected'));
-        event.target.classList.add('selected'); // Use event.target to add the selected class
-    }
+function toggleDraftButton() {
+    const draftButton = document.getElementById('draft-player');
+    draftButton.disabled = !(selectedTeam && selectedPlayer);
+}
 
-    function draftPlayer(player) {
+function draftPlayer() {
+    if (selectedTeam && selectedPlayer) {
         fetch('/draft', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ teamId: selectedTeam, playerId: player.id })
+            body: JSON.stringify({ teamId: selectedTeam.id, playerId: selectedPlayer.id }),
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const draftedPlayersList = document.getElementById('drafted-players');
-                const playerItem = document.createElement('li');
-                playerItem.textContent = `${player.prospect} (${player.position})`;
-                draftedPlayersList.appendChild(playerItem);
-
-                // Remove the drafted player from the list
-                const playersSection = document.getElementById('players');
-                playersSection.removeChild(document.querySelector(`.player[data-id="${player.id}"]`));
+            .then(() => {
+                const draftedList = document.getElementById('drafted-list');
+                const listItem = document.createElement('li');
+                listItem.textContent = `${selectedTeam.name} selected ${selectedPlayer.prospect}`;
+                draftedList.appendChild(listItem);
 
                 selectedPlayer = null;
-                resetClockAndSwitchTeam(); // Add this line to reset the clock and switch to the next team after drafting a player
-            } else {
-                alert('Failed to draft player.');
-            }
-        })
-        .catch(err => console.error(err));
+                toggleDraftButton();
+            });
     }
-});
+}
+
+function resetDraft() {
+    selectedTeam = null;
+    selectedPlayer = null;
+    document.getElementById('selected-team').textContent = 'Selected Team: None';
+    document.getElementById('drafted-list').innerHTML = '';
+    loadPlayers();
+}
+
+function startCountdown() {
+    const timer = document.getElementById('countdown-timer');
+    countdownTimer = setInterval(() => {
+        if (currentTime > 0) {
+            currentTime--;
+            const minutes = Math.floor(currentTime / 60);
+            const seconds = currentTime % 60;
+            timer.textContent = `Time Remaining: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+        } else {
+            clearInterval(countdownTimer);
+            alert('Draft time is over!');
+        }
+ 
+    }, 1000);
+}
