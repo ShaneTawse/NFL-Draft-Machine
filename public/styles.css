@@ -1,17 +1,25 @@
 /* General Styles */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    background-color: #aba7a7;
     margin: 0;
     padding: 0;
 }
 
-header {
+header,h2 {
     background-color: #333;
     color: #fff;
     padding: 15px 0;
     text-align: center;
     font-size: 2em;
+}
+
+h3 {
+    background-color: #333;
+    color: #fff;
+    padding: 15px 0;
+    text-align: center;
+    font-size: 1em;
 }
 
 .section {
@@ -39,9 +47,133 @@ header {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-#players {
-    max-height: 500px;
-    overflow-y: auto;
+/* Position Filter Buttons */
+.position-buttons {
+    display: flex;
+    flex-wrap: wrap; /* Allows buttons to wrap onto the next line */
+    gap: 10px; /* Space between buttons */
+    margin-bottom: 15px; /* Space below the button row */
+    justify-content: center; /* Centers the buttons horizontally */
+}
+
+.position-btn {
+    padding: 8px 16px; /* Button padding */
+    background-color: #20f7f7; /* Button background color */
+    color: rgb(12, 12, 12);
+    border: none;
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer;
+    font-size: 1em;
+    text-align: center;
+    white-space: nowrap; /* Prevent text overflow */
+}
+
+.position-btn:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Ensures buttons do not overflow the container */
+#players #position-buttons {
+    max-width: 100%;
+    overflow-x: auto; /* Allows horizontal scrolling if necessary */
+}
+
+/* Responsive for smaller screens */
+@media (max-width: 768px) {
+    .position-buttons {
+        justify-content: flex-start; /* Align buttons to the left on smaller screens */
+    }
+}
+
+
+
+/* Existing #team-needs styling */
+#team-needs {
+    margin-top: 20px;
+    height: 150px;  /* Keep the height the same as in your original CSS */
+    border: 1px dashed #ccc;
+    padding: 10px;
+    background-color: #f9f9f9;
+    display: flex;  /* Use flexbox to align items side by side */
+    gap: 10px;  /* Space between the boxes */
+}
+
+/* New #needs-box styling for three even boxes */
+#needs-box {
+    display: flex;  /* Enable flexbox layout */
+    flex: 1;  /* Allow it to take up available space */
+    gap: 10px;  /* Space between each box */
+}
+
+#needs-box div {
+    flex: 1;  /* Each box takes up equal width */
+    padding: 10px;
+    background-color: #e8f4f8;  /* Example background color for each box */
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Optional: Change the background for each box */
+#needs-box div:nth-child(1) {
+    background-color: #f4f7f8;
+}
+
+#needs-box div:nth-child(2) {
+    background-color: #95dcf0;
+}
+
+#needs-box div:nth-child(3) {
+    background-color: #b5f7ca;
+}
+
+#needs-box div:nth-child(4) {
+    
+    max-height: 300px; /* You can adjust this height to suit your layout */
+    overflow-y: auto; /* Allows vertical scrolling */
+    background-color: #e8f4f8;
+    padding-right: 10px; /* Optional: Adds padding to the right of the box */
+    border-radius: 5px; /* Optional: Adds rounded corners to the box */
+       
+    
+   
+}
+
+.header-container {
+    display: flex;               /* Make the headers display in a row */
+    justify-content: space-between; /* Distribute space evenly */
+    gap: 20px;                   /* Space between the headers */
+    margin-bottom: 10px;         /* Add some space below the headers */
+}
+
+/* Aligning the h4 headers side by side */
+
+.header-container h4 {
+    margin: 0;
+    padding: 0;
+    font-size: 1.5em;            /* Adjust font size */
+    font-weight: normal;   
+    font-family: Verdana, Geneva, Tahoma, sans-serif;      /* Make font weight normal (or adjust as needed) */
+}
+
+#team-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#team-list li {
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    text-align: center;
+}
+
+#team-list li:hover {
+    background-color: #0056b3;
 }
 
 button {
@@ -56,8 +188,30 @@ button {
     font-size: 1em;
 }
 
+/* General container for the buttons */
+.button-container {
+    display: flex;
+    flex-direction: row; /* Align the two button groups side by side */
+    gap: 20px; /* Space between the button groups */
+}
+
+/* Grouping the draft control buttons */
+.draft-buttons {
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    gap: 10px; /* Space between buttons */
+}
+
+/* Grouping the speed buttons */
+.speed-buttons {
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    gap: 10px; /* Space between buttons */
+}
+
+
 button:hover {
-    background-color: #05f832;
+    background-color: #0056b3;
 }
 
 button:disabled {
@@ -67,10 +221,8 @@ button:disabled {
 
 /* Drafted Players List */
 #drafted-list {
-    list-style-type:decimal;
-    border: #007BFF;
-    box-sizing: border-box;
-    padding: 0;
+    list-style-type: none;
+    padding: 5px;
     margin: 0;
 }
 
@@ -83,6 +235,98 @@ button:disabled {
 }
 
 .selected {
-    background-color:#07f627 !important;
+    background-color: #07f627 !important;
     color: #fff !important;
 }
+
+.on-clock {
+    color: rgb(0, 255, 247);
+    font-weight: bold;
+    background-color: #FFD700;
+}
+
+#draft-order-container {
+    width: 100%;
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+#draft-order-list {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px; /* Adjust the space between the list items */
+    list-style-type: none;
+    padding: 10px;
+    margin: 0;
+}
+
+#draft-order-list li {
+    padding: 10px;
+    background-color: #f2f2f2;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+
+/* Player Buttons */
+.player-button {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+}
+
+.player-button:hover {
+    background-color: #0056b3;
+}
+
+.selected-player {
+    background-color: #007BFF !important;
+    color: white !important;
+}
+
+#countdown-timer {
+    font-size: 2em;
+    font-weight: bold;
+    color: #fff;
+    background-color: #333;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 20px 0;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+#current-round{
+    font-size: large;
+    font-weight:bold;
+    color: rgb(3, 65, 30);
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 20px 0;
+    text-align: left;
+}
+
+/* Ad-Box-2 Styling (Empty container for ads) */
+.Ad-Box-2 {
+    width: 300px; /* Set a fixed width for the ad box */
+    height: 200px; /* Adjust the height for the container */
+    background-color: #f2f2f2; /* Light gray background */
+    border-radius: 5px; /* Rounded corners */
+    border: 1px solid #ccc; /* Light border */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Light shadow */
+    display: flex;
+    justify-content: center; /* Center content inside (if you add ads) */
+    align-items: center; /* Center content vertically */
+    color: #333; /* Dark text color for any placeholder text */
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+}
+

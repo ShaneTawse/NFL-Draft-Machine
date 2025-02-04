@@ -12,33 +12,90 @@
     </header>
 
     <div class="section" id="draft-section">
+        <!-- Team Info Column -->
         <div id="team-info">
-            <h2>Team Info</h2>
-            <ul>
-                <li id="selected-team">Selected Team: None</li>
-                <li id="draft-order">Draft Order: Loading...</li>
+            <h2>Team Select</h2>
+            <ul id="team-list">
+                <!-- Teams will be dynamically loaded here -->
             </ul>
+
+            <!-- Team Needs Box -->
+            <h3>Team Needs</h3>
+            <div class="header-container">
+                <h4>Team/Coaches</h4>  
+                <h4>AD</h4>
+                <h4>Trade Offers</h4>  
+                <h4>Selected Players</h4>
+            </div>         
+            <div id="team-needs">
+                <div id="needs-box">
+                    <div><!-- Box 1 content goes here (Team Logo/Coaches) --></div>
+                    <div><!-- Box 2 content goes here (Ads) --></div>
+                    <div><!-- Box 3 content goes here (Trade Offers) --></div>
+                    <div id="selected-players-box"><!-- Box 4 content goes here (Selected Players) --></div>
+                </div>
+            </div>
         </div>
 
+        <!-- Draft Order Horizontal Scroll Container -->
+        <div id="draft-order-container">
+            <h2>Draft Order</h2>
+            <ul id="draft-order-list"></ul>
+        </div>
+
+        <!-- Players Column -->
         <div id="players">
             <h2>Players</h2>
+            <div id="position-buttons" class="position-buttons">
+                <button class="position-btn" onclick="filterPlayers('QB')">QB</button>
+                <button class="position-btn" onclick="filterPlayers('RB')">RB</button>
+                <button class="position-btn" onclick="filterPlayers('WR')">WR</button>
+                <button class="position-btn" onclick="filterPlayers('TE')">TE</button>
+                <button class="position-btn" onclick="filterPlayers('OT')">OT</button>
+                <button class="position-btn" onclick="filterPlayers('OG')">OG</button>
+                <button class="position-btn" onclick="filterPlayers('OC')">OC</button>
+                <button class="position-btn" onclick="filterPlayers('DT')">DT</button>
+                <button class="position-btn" onclick="filterPlayers('DE')">DE</button>
+                <button class="position-btn" onclick="filterPlayers('ILB')">ILB</button>
+                <button class="position-btn" onclick="filterPlayers('OLB')">OLB</button>
+                <button class="position-btn" onclick="filterPlayers('CB')">CB</button>
+                <button class="position-btn" onclick="filterPlayers('FS')">FS</button>
+                <button class="position-btn" onclick="filterPlayers('SS')">SS</button>
+                <button class="position-btn" onclick="filterPlayers('K')">K</button>
+                <button class="position-btn" onclick="filterPlayers('P')">P</button>
+                <button class="position-btn" onclick="showAllPlayers()">Home</button>
+            </div>
             <div id="player-list">
                 <!-- Players will be dynamically loaded here -->
             </div>
         </div>
 
+        <!-- Draft Console Column -->
         <div id="draft-content">
             <h2>Draft Console</h2>
-            <div id="countdown-timer">Time Remaining: 05:00</div>
-            <button id="draft-player" disabled>Draft Player</button>
-            <button id="reset-draft">Reset Draft</button>
-        </div>
+            <div id="countdown-timer">Time Remaining: 03:00</div>
+            <div id="current-round">Current Round: 1</div>
+            <div id="button-container" class="button-container">
+                <div class="draft-buttons">
+                    <button id="draft-player" onclick="draftPlayer()">Draft Player</button>
+                    <button id="start-draft" onclick="startDraft()">Start Draft</button>
+                    <button id="reset-draft" onclick="resetDraft()">Reset Draft</button>
+                </div>
+                <div class="speed-buttons">
+                    <button id="slow-speed" onclick="setDraftSpeed('slow')">Slow</button>
+                    <button id="medium-speed" onclick="setDraftSpeed('medium')">Medium</button>
+                    <button id="fast-speed" onclick="setDraftSpeed('fast')">Fast</button>
+                </div>
+            <div class = "Ad-Box-2"></div>
+            </div>
 
-        <div id="drafted-players">
-            <h2>Drafted Players</h2>
-            <ul id="drafted-list">
-                <!-- Drafted players will be shown here -->
-            </ul>
+            <!-- Drafted Players List -->
+            <div id="drafted-players">
+                <h2>Drafted Players</h2>
+                <ul id="drafted-list">
+                    <li id="selected-team">Selected Team: None</li>
+                </ul>
+            </div>
         </div>
     </div>
 

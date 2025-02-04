@@ -1,0 +1,192 @@
+Arizona Cardinals
+
+Quarterback 
+Offensive Line
+Edge Rusher
+Cornerback
+
+Atlanta Falcons
+Quarterback 
+Edge Rusher
+Cornerback
+Wide Receiver
+
+Baltimore Ravens
+Wide Receiver
+Offensive Line
+Cornerback
+Linebacker
+
+Buffalo Bills
+Running Back
+Offensive Line
+Cornerback
+Edge Rusher
+
+Carolina Panthers
+Quarterback
+Offensive Line
+Wide Receiver
+Cornerback
+
+Chicago Bears
+Offensive Line
+Edge Rusher
+Cornerback
+Wide Receiver
+
+Cincinnati Bengals
+Offensive Line
+Running Back
+Cornerback
+Tight End
+
+Cleveland Browns
+Quarterback 
+Offensive Line
+Wide Receiver
+Cornerback
+
+Dallas Cowboys
+Wide Receiver
+Offensive Line
+Cornerback
+Edge Rusher
+
+Denver Broncos
+Quarterback
+Offensive Line
+Wide Receiver
+Cornerback
+
+Detroit Lions
+Cornerback
+Offensive Line
+Running Back
+Linebacker
+
+Green Bay Packers
+Quarterback 
+Wide Receiver
+Offensive Line
+Tight End
+
+Houston Texans
+Quarterback
+Offensive Line
+Wide Receiver
+Edge Rusher
+
+Indianapolis Colts
+Quarterback
+Offensive Line
+Wide Receiver
+Edge Rusher
+
+Jacksonville Jaguars
+Offensive Line
+Wide Receiver
+Defensive Line
+Cornerback
+
+Kansas City Chiefs
+Offensive Line
+Wide Receiver
+Cornerback
+Running Back
+
+Las Vegas Raiders
+Quarterback
+Offensive Line
+Edge Rusher
+Cornerback
+
+Los Angeles Chargers
+Offensive Line
+Edge Rusher
+Wide Receiver
+Cornerback
+
+Los Angeles Rams
+Offensive Line
+Wide Receiver
+Edge Rusher
+Cornerback
+
+Miami Dolphins
+Offensive Line
+Running Back
+Edge Rusher
+Cornerback
+
+Minnesota Vikings
+Defensive Line
+Offensive Line
+Cornerback
+Wide Receiver
+
+New England Patriots
+Wide Receiver
+Offensive Line
+Cornerback
+Tight End
+
+New Orleans Saints
+Quarterback
+Offensive Line
+Edge Rusher
+Wide Receiver
+
+New York Giants
+Wide Receiver
+Offensive Line
+Edge Rusher
+Cornerback
+
+New York Jets
+Quarterback
+Offensive Line
+Wide Receiver
+Cornerback
+
+Philadelphia Eagles
+Running Back
+Linebacker
+Cornerback
+Edge Rusher
+
+Pittsburgh Steelers
+Offensive Line
+Quarterback
+Cornerback
+Wide Receiver
+
+San Francisco 49ers
+Cornerback
+Running Back
+Offensive Line
+Edge Rusher
+
+Seattle Seahawks
+Edge Rusher
+Offensive Line
+Cornerback
+Running Back
+
+Tampa Bay Buccaneers
+Quarterback
+Offensive Line
+Wide Receiver
+Edge Rusher
+
+Tennessee Titans
+Offensive Line
+Quarterback
+Wide Receiver
+Edge Rusher
+
+Washington Commanders
+Quarterback
+Offensive Line
+Wide Receiver
+Cornerback
