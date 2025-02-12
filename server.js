@@ -10,6 +10,8 @@ const PORT = 3000;
 const dbPath = './database.db';
 const draftFilePath = 'Full 2025 NFL Draft Order.txt';
 const teamsFilePath = 'Teams List.md';
+const teamPositionNeedsFilePath = path.join(__dirname, 'Team Position Needs.txt');
+
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -26,6 +28,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
 // **Initialize Draft Order Using the Text File**
 let draftOrder = [];
 let teamList = [];
+let teamPositionNeeds = {};
 
 // Function to load the draft order from the file
 function loadDraftOrderSync() {
@@ -55,9 +58,32 @@ function loadTeamListSync() {
     }
 }
 
-// Load the draft order and team list synchronously before starting the server
+function loadTeamPositionNeedsSync() {
+    try {
+        const data = fs.readFileSync(teamPositionNeedsFilePath, 'utf8');
+        console.log('Raw position needs file content:', data); // Log raw content for debugging
+
+        const lines = data.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+
+        // Loop through each line and map teams to their position needs
+        for (let i = 0; i < lines.length; i++) {
+            const teamLine = lines[i];
+            const teamName = teamLine.split(':')[0].trim();
+            const positions = teamLine.split(':')[1].split(',').map(pos => pos.trim());
+
+            teamPositionNeeds[teamName] = positions;
+        }
+        console.log('Team position needs loaded:', teamPositionNeeds);
+    } catch (err) {
+        console.error("Error reading the team position needs file:", err);
+    }
+}
+
+
+// Load the draft order, team list, and team position needs synchronously before starting the server
 loadDraftOrderSync();
 loadTeamListSync();
+loadTeamPositionNeedsSync();
 
 // **Team List Route**
 app.get('/teams', (req, res) => {
@@ -78,6 +104,17 @@ app.post('/draft', (req, res) => {
         }
         res.json({ success: true });
     });
+});
+
+// **Team Position Needs Route**
+app.get('/team-position-needs/:teamName', (req, res) => {
+    const teamName = req.params.teamName;
+
+    if (teamPositionNeeds[teamName]) {
+        res.json({ positions: teamPositionNeeds[teamName] });
+    } else {
+        res.status(404).json({ error: 'Team not found or no position needs available' });
+    }
 });
 
 app.get('/players', (req, res) => {

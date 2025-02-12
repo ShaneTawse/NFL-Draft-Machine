@@ -98,7 +98,7 @@ h3 {
     gap: 10px;  /* Space between the boxes */
 }
 
-/* New #needs-box styling for three even boxes */
+/* New #needs-box styling for four even boxes */
 #needs-box {
     display: flex;  /* Enable flexbox layout */
     flex: 1;  /* Allow it to take up available space */
@@ -270,7 +270,7 @@ button:disabled {
 
 /* Player Buttons */
 .player-button {
-    background-color: #007BFF;
+    background-color: #6eb0f7;
     color: white;
     padding: 10px;
     margin: 5px;
@@ -290,7 +290,7 @@ button:disabled {
     color: white !important;
 }
 
-#countdown-timer {
+#current-round{
     font-size: 2em;
     font-weight: bold;
     color: #fff;
@@ -302,16 +302,6 @@ button:disabled {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
-#current-round{
-    font-size: large;
-    font-weight:bold;
-    color: rgb(3, 65, 30);
-    background-color: #fff;
-    padding: 10px;
-    border-radius: 10px;
-    margin: 20px 0;
-    text-align: left;
-}
 
 /* Ad-Box-2 Styling (Empty container for ads) */
 .Ad-Box-2 {
@@ -330,3 +320,63 @@ button:disabled {
     text-align: center;
 }
 
+
+
+
+
+#teampos-needs {
+    margin-top: 20px;
+    height: 50px;  /* Keep the height the same as in your original CSS */
+    border: 1px dashed #ccc;
+    padding: 10px;
+    background-color: #f9f9f9;
+    display: flex;  /* Use flexbox to align items side by side */
+    gap: 5px;  /* Space between the boxes */
+}
+
+/* New #needs-box styling for four even boxes */
+#needspos-box {
+    display: flex;  /* Enable flexbox layout */
+    flex: 1;  /* Allow it to take up available space */
+    gap: 5px;  /* Space between each box */
+}
+
+#needspos-box div {
+    flex: 1;  /* Each box takes up equal width */
+    padding: 10px;
+    background-color: #e8f4f8;  /* Example background color for each box */
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Optional: Change the background for each box */
+#needspos-box div:nth-child(1) {
+    background-color: #95dcf0;
+}
+
+#needspos-box div:nth-child(2) {
+    background-color: #95dcf0;
+}
+
+#needspos-box div:nth-child(3) {
+    background-color:#95dcf0;
+}
+
+#needspos-box div:nth-child(4) {
+    
+    background-color: #95dcf0;
+       
+    
+   
+}
+
+
+
+#list-container{
+max-height: 800px; /* You can adjust this height to suit your layout */
+overflow-y: auto; /* Allows vertical scrolling */
+background-color: #e8f4f8;
+padding-right: 10px; /* Optional: Adds padding to the right of the box */
+border-radius: 5px; /* Optional: Adds rounded corners to the box */
+}

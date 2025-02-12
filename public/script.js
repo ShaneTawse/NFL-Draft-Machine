@@ -1,4 +1,4 @@
-let selectedTeam = null; 
+let selectedTeam = null;
 let selectedPlayer = null;
 let userTeamPicks = [];
 let draftOrder = [];
@@ -10,6 +10,7 @@ let currentRound = 1;
 let draftStarted = false;
 let timer = 180; // 3 minutes in seconds
 let speed = 'medium'; // Default speed of drafting (slow, medium, fast)
+let teamPositions = {}; // Store team needs positions
 
 document.addEventListener('DOMContentLoaded', () => {
     loadTeams();
@@ -23,6 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('medium-speed').addEventListener('click', () => setSpeed('medium'));
     document.getElementById('fast-speed').addEventListener('click', () => setSpeed('fast'));
 });
+
+
+
 
 // Function to load teams into the team info column
 function loadTeams() {
@@ -50,13 +54,6 @@ function loadTeams() {
                     listItem.style.backgroundColor = team.color || "#007BFF";
                 });
 
-                listItem.addEventListener('click', () => {
-                    listItem.style.backgroundColor = "green";
-                });
-                
-
-                
-
                 // Event listener for when a user selects a team
                 listItem.addEventListener('click', () => {
                     if (draftStarted) return alert("Draft already started!");
@@ -68,6 +65,8 @@ function loadTeams() {
                     // Change background color to green upon selection
                     listItem.style.backgroundColor = "green";
                     
+                    // Load the team positions from the loaded data
+                    loadTeamPositionNeeds(team.name);
                 });
             });
         })
@@ -82,6 +81,28 @@ function darkenColor(color) {
     rgb[2] = Math.max(rgb[2] - 30, 0);
     return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
 }
+
+// Load the positions for the selected team
+function loadTeamPositionNeeds(teamName) {
+    fetch(`/team-position-needs/${teamName}`)
+        .then(res => res.json())
+        .then(data => {
+            const positions = data.positions;
+
+            // Populate the "needspos-box" elements with the respective positions
+            for (let i = 0; i < 4; i++) {
+                const box = document.getElementById(`needspos-box-${i + 1}`);
+                if (positions[i]) {
+                    box.textContent = positions[i];
+                    box.classList.remove('hidden'); // Ensure the box is visible
+                } else {
+                    box.classList.add('hidden'); // Hide the box if no position exists
+                }
+            }
+        })
+        .catch(error => console.error('Error fetching team position needs:', error));
+}
+
 
 // Function to load players into player buttons
 function loadPlayers() {
@@ -145,40 +166,16 @@ function startDraft() {
 
     draftStarted = true;
     document.getElementById('start-draft').disabled = true;
-
+    
     // Keep Team Info and show draft order
     document.getElementById('team-info').style.display = 'block';
     document.getElementById('draft-order').classList.remove('hidden');
-
-    // Timer starts when draft begins
-    startTimer();
 
     userTeamPicks = draftOrder
         .map((team, index) => ({ team, pickNumber: index }))
         .filter(entry => entry.team === selectedTeam.name);
 
     autoDraft();
-}
-
-// Timer countdown functionality
-function startTimer() {
-    timer = 180; // 3 minutes in seconds
-    document.getElementById('countdown-timer').textContent = `Time Remaining: 03:00`;
-
-    const timerInterval = setInterval(() => {
-        if (!draftStarted || timer <= 0) {
-            clearInterval(timerInterval);
-            return;
-        }
-
-        const currentTeam = draftOrder[currentPick % draftOrder.length];
-        if (currentTeam === selectedTeam.name) {
-            timer--; // Only decrement timer if it’s the user’s pick
-            const minutes = Math.floor(timer / 60);
-            const seconds = timer % 60;
-            document.getElementById('countdown-timer').textContent = `Time Remaining: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-        }
-    }, 1000);
 }
 
 // Draft a player
@@ -209,18 +206,15 @@ function draftPlayer() {
     .then(res => res.json())
     .then(data => {
         if (data.success) {
-            
             const selectedPlayersBox = document.getElementById('selected-players-box');
             const playerListItem = document.createElement('div');
             playerListItem.textContent = `${selectedPlayer.prospect} (${selectedPlayer.position})`;
             selectedPlayersBox.appendChild(playerListItem);
-            
+
             const draftedList = document.getElementById('drafted-list');
             const draftItem = document.createElement('li');
             draftItem.textContent = `${selectedTeam.name} drafted ${selectedPlayer.prospect}`;
             draftedList.appendChild(draftItem);
-
-            
 
             // Scroll to the new draft pick
             scrollDraftPicks();
@@ -313,50 +307,6 @@ function updateCurrentPick() {
     draftOrderList.scrollLeft = currentPick * (currentTeamElement ? currentTeamElement.offsetWidth : 0);
 }
 
-function filterPlayers(position) {
-    const playerList = document.getElementById('player-list');
-    // Clear the player list
-    playerList.innerHTML = '';
-    
-    // Example: Assuming you have an array of player objects with position info
-    const players = [
-        { name: 'Player 1', position: 'QB' },
-        { name: 'Player 2', position: 'RB' },
-        { name: 'Player 3', position: 'WR' },
-        { name: 'Player 4', position: 'TE' },
-        // Add all players...
-    ];
-    
-    // Filter players based on the selected position
-    const filteredPlayers = players.filter(player => player.position === position);
-
-    // Populate the player list with the filtered players
-    filteredPlayers.forEach(player => {
-        const playerItem = document.createElement('li');
-        playerItem.textContent = player.name;
-        playerList.appendChild(playerItem);
-    });
-}
-
-
-// Function to show all remaining undrafted players (the "Home" button functionality)
-function showAllPlayers() {
-    const playerList = document.getElementById('player-list');
-    // Clear the player list
-    playerList.innerHTML = '';
-
-    // Get all undrafted players (those who are not in the draftedPlayers array)
-    const undraftedPlayers = allPlayers.filter(player => !player.drafted);
-
-    // Populate the player list with all undrafted players
-    undraftedPlayers.forEach(player => {
-        const playerItem = document.createElement('li');
-        playerItem.textContent = player.name;
-        playerList.appendChild(playerItem);
-    });
-}
-
-
 // Reset Draft
 function resetDraft() {
     draftStarted = false;
@@ -372,4 +322,5 @@ function resetDraft() {
     loadTeams();
     loadPlayers();
     loadDraftOrder();
+    loadTeamPositions(); // Reload team positions
 }

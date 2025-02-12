@@ -1,0 +1,63 @@
+Arizona Cardinals:QB,OL,DE,CB,
+
+Atlanta Falcons:QB,DE,CB,WR
+
+Baltimore Ravens:WR,OL,CB,LB
+
+Buffalo Bills:CB,OL,RB,DT
+
+Carolina Panthers:OL,WR,QB,CB
+
+Chicago Bears:OL,DE,CB,WR
+
+Cincinnati Bengals:OL,RB,TE,CB
+
+Cleveland Browns:QB,OL,WR,CB
+
+Dallas Cowboys:OL,WR,DE,CB
+
+Denver Broncos:QB,OL,WR,CB
+
+Detroit Lions:CB,OL,RB,LB
+
+Green Bay Packers:QB,WR,OL,TE
+
+Houston Texans:QB,OL,WR,DE
+
+Indianapolis Colts:QB,OL,WR,DE
+
+Jacksonville Jaguars:OL,WR,DL,CB
+
+Kansas City Chiefs:OL,WR,CB,RB
+
+Las Vegas Raiders:QB,OL,DE,CB
+
+Los Angeles Chargers:OL,DE,WR,CB
+
+Los Angeles Rams:OL,WR,DE,CB
+
+Miami Dolphins:OL,RB,DE,CB
+
+Minnesota Vikings:DL,OL,CB,WR
+
+New England Patriots:WR,OL,CB,TE
+
+New Orleans Saints:QB,OL,DE,WR
+
+New York Giants:QB,OL,DE,CB
+
+New York Jets:QB,OL,WR,CB
+
+Philadelphia Eagles:RB,LB,CB,DE
+
+Pittsburgh Steelers:OL,QB,CB,WR
+
+San Francisco 49ers:CB,RB,OL,DE
+
+Seattle Seahawks:DE,OL,RB,CB
+
+Tampa Bay Buccaneers:QB,OL,WR,DE
+
+Tennessee Titans:OL,QB,WR,DE,
+
+Washington Commanders:OL,WR,CB,S
