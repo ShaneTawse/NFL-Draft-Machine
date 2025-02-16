@@ -11,6 +11,7 @@ const dbPath = './database.db';
 const draftFilePath = 'Full 2025 NFL Draft Order.txt';
 const teamsFilePath = 'Teams List.md';
 const teamPositionNeedsFilePath = path.join(__dirname, 'Team Position Needs.txt');
+const coachesFilePath = path.join(__dirname, 'Coaches.txt');
 
 
 app.use(bodyParser.json());
@@ -29,6 +30,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
 let draftOrder = [];
 let teamList = [];
 let teamPositionNeeds = {};
+
 
 // Function to load the draft order from the file
 function loadDraftOrderSync() {
@@ -56,6 +58,68 @@ function loadTeamListSync() {
     } catch (err) {
         console.error("Error reading the team list file:", err);
     }
+}
+
+
+// Route to get coaches for a specific team
+app.get('/getCoaches', (req, res) => {
+    const team = req.query.team;
+
+    if (!team) {
+        return res.status(400).json({ error: 'Team is required' });
+    }
+
+    // Read the Coaches.txt file using the coachesFilePath variable
+    fs.readFile(coachesFilePath, 'utf8', (err, data) => {
+        if (err) {
+            return res.status(500).json({ error: 'Error reading the coaches file' });
+        }
+
+        // Process and send coach data
+        const teamData = extractCoachesForTeam(data, team);
+        
+        if (!teamData) {
+            return res.status(404).json({ error: 'Team not found' });
+        }
+
+        // Send back the coaches' data as JSON
+        res.json(teamData);
+    });
+});
+
+// Function to extract coaches for a specific team
+function extractCoachesForTeam(data, team) {
+    // Normalize the team input to lowercase and trim extra spaces
+    const normalizedTeam = team.trim().toLowerCase();  
+
+    // Update the regex pattern to normalize the team name consistently
+    const teamRegex = new RegExp(`^\\s*${normalizedTeam}\\s*:(([\\s\\S]*?))(?=\\n\\w+:|$)`, 'im');
+
+    // Find the team and extract coach info
+    const teamMatch = data.match(teamRegex);
+
+    if (!teamMatch) {
+        return null;  // Team not found
+    }
+
+    const coachesText = teamMatch[1];
+
+    // Parse the coaches' details
+    const coaches = {};
+    const lines = coachesText.trim().split('\n');
+    lines.forEach(line => {
+        if (line.includes('Head Coach:')) {
+            coaches.headCoach = line.replace('Head Coach:', '').trim();
+        }
+        if (line.includes('Offensive Coordinator:')) {
+            coaches.offensiveCoordinator = line.replace('Offensive Coordinator:', '').trim();
+        }
+        if (line.includes('Defensive Coordinator:')) {
+            coaches.defensiveCoordinator = line.replace('Defensive Coordinator:', '').trim();
+        }
+    });
+
+    return coaches;
 }
 
 function loadTeamPositionNeedsSync() {

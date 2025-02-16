@@ -67,6 +67,7 @@ function loadTeams() {
                     
                     // Load the team positions from the loaded data
                     loadTeamPositionNeeds(team.name);
+                    fetchCoachesForTeam(team.name)
                 });
             });
         })
@@ -156,6 +157,51 @@ function displayDraftOrder() {
         draftOrderList.appendChild(listItem);
     });
 }
+
+const apiUrl = '/getCoaches';  // Define the URL for the coaches API
+
+// Function to fetch coaches for the selected team
+function fetchCoachesForTeam() {
+    if (!selectedTeam) {
+        return; // If no team is selected, don't proceed
+    }
+
+    const team = selectedTeam.name; // Get the name of the selected team
+
+    // Make a fetch request to the server to get the coach data
+    fetch(`${apiUrl}?team=${team}`)
+        .then(response => response.json())
+        .then(data => {
+            displayCoaches(data);
+        })
+        .catch(error => console.error('Error fetching coaches:', error));
+}
+
+
+// Function to display coaches' data in Box 1
+function displayCoaches(data) {
+    const coachesInfo = document.getElementById('coaches-info');
+    coachesInfo.innerHTML = ''; // Clear any previous data
+
+    if (data) {
+        const headCoach = data.headCoach || 'N/A';
+        const offensiveCoordinator = data.offensiveCoordinator || 'N/A';
+        const defensiveCoordinator = data.defensiveCoordinator || 'N/A';
+
+        coachesInfo.innerHTML = `
+            <p>Head Coach: ${headCoach}</p>
+            <p>Offensive Coordinator: ${offensiveCoordinator}</p>
+            <p>Defensive Coordinator: ${defensiveCoordinator}</p>
+        `;
+    } else {
+        coachesInfo.innerHTML = '<p>No coach data available.</p>';
+    }
+}
+
+
+
+
+
 
 // Start Draft Logic
 function startDraft() {
