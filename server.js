@@ -88,12 +88,13 @@ app.get('/getCoaches', (req, res) => {
 });
 
 // Function to extract coaches for a specific team
+// Function to extract coaches for a specific team
 function extractCoachesForTeam(data, team) {
     // Normalize the team input to lowercase and trim extra spaces
-    const normalizedTeam = team.trim().toLowerCase();  
+    const normalizedTeam = team.trim().toLowerCase();
 
-    // Update the regex pattern to normalize the team name consistently
-    const teamRegex = new RegExp(`^\\s*${normalizedTeam}\\s*:(([\\s\\S]*?))(?=\\n\\w+:|$)`, 'im');
+    // Regex to capture the coach data for the team
+    const teamRegex = new RegExp(`^\\s*${normalizedTeam}\\s*:\\s*([\\s\\S]*?)(?=\\n\\w+:|$)`, 'im');
 
     // Find the team and extract coach info
     const teamMatch = data.match(teamRegex);
@@ -106,21 +107,24 @@ function extractCoachesForTeam(data, team) {
 
     // Parse the coaches' details
     const coaches = {};
-    const lines = coachesText.trim().split('\n');
+    const lines = coachesText.trim().split(',');
+
+    // Loop through each line to extract coach data
     lines.forEach(line => {
-        if (line.includes('Head Coach:')) {
-            coaches.headCoach = line.replace('Head Coach:', '').trim();
+        if (line.includes('headCoach:')) {
+            coaches.headCoach = line.replace('headCoach:', '').trim();
         }
-        if (line.includes('Offensive Coordinator:')) {
-            coaches.offensiveCoordinator = line.replace('Offensive Coordinator:', '').trim();
+        if (line.includes('offensiveCoordinator:')) {
+            coaches.offensiveCoordinator = line.replace('offensiveCoordinator:', '').trim();
         }
-        if (line.includes('Defensive Coordinator:')) {
-            coaches.defensiveCoordinator = line.replace('Defensive Coordinator:', '').trim();
+        if (line.includes('defensiveCoordinator:')) {
+            coaches.defensiveCoordinator = line.replace('defensiveCoordinator:', '').trim();
         }
     });
 
     return coaches;
 }
+
 
 function loadTeamPositionNeedsSync() {
     try {
