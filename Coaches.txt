@@ -1,42 +1,21 @@
-
 Buffalo Bills: headCoach: Sean McDermott, offensiveCoordinator: Ken Dorsey, defensiveCoordinator: Leslie Frazier
-
 Miami Dolphins: headCoach: Mike McDaniel, offensiveCoordinator: Frank Smith, defensiveCoordinator: Vic Fangio
-  
 New England Patriots: headCoach: Mike Vrabel, offensiveCoordinator: Josh McDaniels, defensiveCoordinator: Terrell Williams
-  
 New York Jets: headCoach: Aaron Glenn, offensiveCoordinator: Tanner Engstrand, defensiveCoordinator: Jeff Ulbrich
-
 Baltimore Ravens: headCoach: John Harbaugh, offensiveCoordinator: Todd Monken, defensiveCoordinator: Mike Macdonald
-
 Cincinnati Bengals: headCoach: Zac Taylor, offensiveCoordinator: Brian Callahan, defensiveCoordinator: Lou Anarumo
-
 Cleveland Browns: headCoach: Kevin Stefanski, offensiveCoordinator: Alex Van Pelt, defensiveCoordinator: Jim Schwartz
-
 Pittsburgh Steelers: headCoach: Mike Tomlin, offensiveCoordinator: Matt Canada, defensiveCoordinator: Teryl Austin
-
 Houston Texans: headCoach: DeMeco Ryans, offensiveCoordinator: Bobby Slowik, defensiveCoordinator: Matt Burke
-
 Indianapolis Colts: headCoach: Shane Steichen, offensiveCoordinator: Jim Bob Cooter, defensiveCoordinator: Gus Bradley
-
 Jacksonville Jaguars: headCoach: Liam Coen, offensiveCoordinator: Press Taylor, defensiveCoordinator: Anthony Campanile
-
 Tennessee Titans: headCoach: Mike Vrabel, offensiveCoordinator: Tim Kelly, defensiveCoordinator: Shane Bowen
-
 Denver Broncos: headCoach: Sean Payton, offensiveCoordinator: Joe Lombardi, defensiveCoordinator: Vance Joseph
-
 Kansas City Chiefs: headCoach: Andy Reid, offensiveCoordinator: Matt Nagy, defensiveCoordinator: Steve Spagnuolo
-
 Las Vegas Raiders: headCoach: Pete Carroll, offensiveCoordinator: Chip Kelly, defensiveCoordinator: Patrick Graham
-
 Los Angeles Chargers: headCoach: Jim Harbaugh, offensiveCoordinator: Greg Roman, defensiveCoordinator: Jesse Minter
-
 Dallas Cowboys: headCoach: Brian Schottenheimer, offensiveCoordinator: Brian Schottenheimer, defensiveCoordinator: Matt Eberflus
-
 New York Giants: headCoach: Brian Daboll, offensiveCoordinator: Mike Kafka, defensiveCoordinator: Wink Martindale
-
 Philadelphia Eagles: headCoach: Nick Sirianni, offensiveCoordinator: Brian Johnson, defensiveCoordinator: Sean Desai
-
 Washington Commanders: headCoach: Dan Quinn, offensiveCoordinator: Kliff Kingsbury, defensiveCoordinator: Joe Whitt Jr.
-
 Chicago Bears: headCoach: Ben Johnson, offensiveCoordinator: Luke Getsy, defensiveCoordinator: Alan Williams
