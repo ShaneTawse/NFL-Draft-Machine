@@ -25,9 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('fast-speed').addEventListener('click', () => setSpeed('fast'));
 });
 
-
-
-
 // Function to load teams into the team info column
 function loadTeams() {
     fetch('/teams')
@@ -58,16 +55,23 @@ function loadTeams() {
                 listItem.addEventListener('click', () => {
                     if (draftStarted) return alert("Draft already started!");
                     selectedTeam = team;
-                    
+
                     document.getElementById('selected-team').textContent = `Selected Team: ${team.name}`;
                     document.getElementById('start-draft').disabled = false; // Enable start draft button
-                    
+
                     // Change background color to green upon selection
                     listItem.style.backgroundColor = "green";
-                    
+
                     // Load the team positions from the loaded data
                     loadTeamPositionNeeds(team.name);
-                    fetchCoachesForTeam(team.name)
+                    fetchCoachesForTeam(team.name);
+
+                    // Highlight selected team
+                    Array.from(document.querySelectorAll('.team-button')).forEach(item => {
+                        if (item !== listItem) {
+                            item.style.backgroundColor = team.color || "#007BFF"; // Reset the color for unselected teams
+                        }
+                    });
                 });
             });
         })
@@ -103,7 +107,6 @@ function loadTeamPositionNeeds(teamName) {
         })
         .catch(error => console.error('Error fetching team position needs:', error));
 }
-
 
 // Function to load players into player buttons
 function loadPlayers() {
@@ -177,7 +180,6 @@ function fetchCoachesForTeam() {
         .catch(error => console.error('Error fetching coaches:', error));
 }
 
-
 // Function to display coaches' data in Box 1
 function displayCoaches(data) {
     const coachesInfo = document.getElementById('coaches-info');
@@ -197,11 +199,6 @@ function displayCoaches(data) {
         coachesInfo.innerHTML = '<p>No coach data available.</p>';
     }
 }
-
-
-
-
-
 
 // Start Draft Logic
 function startDraft() {
@@ -357,7 +354,7 @@ function updateCurrentPick() {
 function resetDraft() {
     draftStarted = false;
     currentPick = 0;
-    timer = 180;  // Reset timer to 3 minutes
+
     document.getElementById('start-draft').disabled = false;
     document.getElementById('draft-player').disabled = true;
     document.getElementById('team-info').style.display = 'block';

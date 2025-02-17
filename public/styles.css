@@ -22,6 +22,14 @@ h3 {
     font-size: 1em;
 }
 
+h4 {
+    background-color: #333;
+    color: #fff;
+    padding: 15px 0;
+    text-align: center;
+    font-size: 0.5em;
+}
+
 .section {
     display: flex;
     gap: 20px;
@@ -46,6 +54,47 @@ h3 {
     border: 1px solid #ccc;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+/* Team Buttons Container */
+#team-list {
+    display: flex;
+    flex-wrap: wrap;  /* Allow buttons to wrap onto the next line if necessary */
+    gap: 20px;  /* Space between buttons */
+    max-width: 50%;  /* Ensure this takes up half the page */
+}
+
+/* Team button styling */
+#team-list li {
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    text-align: center;
+    flex: 1 1 calc(50% - 20px);  /* Each button takes up 50% of the width minus gap space */
+}
+
+/* Highlight the selected team */
+#team-list li.selected {
+    background-color: #28a745;  /* Green background for selected team */
+}
+
+/* Hover effect */
+#team-list li:hover {
+    background-color: #0056b3;
+}
+
+/* Adjust the layout to have the team button list in one column and a second column beside it */
+#team-info {
+    flex: 1 1 50%;  /* Takes up half the screen */
+}
+
+#team-needs {
+    flex: 1 1 50%;  /* Takes up the other half of the screen */
+}
+
+
 
 /* Position Filter Buttons */
 .position-buttons {
@@ -84,8 +133,6 @@ h3 {
         justify-content: flex-start; /* Align buttons to the left on smaller screens */
     }
 }
-
-
 
 /* Existing #team-needs styling */
 #team-needs {
@@ -128,17 +175,14 @@ h3 {
 }
 
 #needs-box div:nth-child(4) {
-    
     max-height: 300px; /* You can adjust this height to suit your layout */
     overflow-y: auto; /* Allows vertical scrolling */
     background-color: #e8f4f8;
     padding-right: 10px; /* Optional: Adds padding to the right of the box */
     border-radius: 5px; /* Optional: Adds rounded corners to the box */
-       
-    
-   
 }
 
+/* Header Container for Team Needs */
 .header-container {
     display: flex;               /* Make the headers display in a row */
     justify-content: space-between; /* Distribute space evenly */
@@ -146,35 +190,7 @@ h3 {
     margin-bottom: 10px;         /* Add some space below the headers */
 }
 
-/* Aligning the h4 headers side by side */
 
-.header-container h4 {
-    margin: 0;
-    padding: 0;
-    font-size: 1.5em;            /* Adjust font size */
-    font-weight: normal;   
-    font-family: Verdana, Geneva, Tahoma, sans-serif;      /* Make font weight normal (or adjust as needed) */
-}
-
-#team-list {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-
-#team-list li {
-    padding: 10px;
-    margin-bottom: 10px;
-    background-color: #007BFF;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
-    text-align: center;
-}
-
-#team-list li:hover {
-    background-color: #0056b3;
-}
 
 button {
     display: block;
@@ -234,17 +250,20 @@ button:disabled {
     border-radius: 5px;
 }
 
+/* Selected team button */
 .selected {
-    background-color: #07f627 !important;
+    background-color: #28a745 !important;  /* Green background for selected team */
     color: #fff !important;
 }
 
+/* On-clock team button */
 .on-clock {
     color: rgb(0, 255, 247);
     font-weight: bold;
     background-color: #FFD700;
 }
 
+/* Draft Order Container */
 #draft-order-container {
     width: 100%;
     overflow-x: auto;
@@ -266,7 +285,6 @@ button:disabled {
     border-radius: 5px;
     border: 1px solid #ccc;
 }
-
 
 /* Player Buttons */
 .player-button {
@@ -290,55 +308,27 @@ button:disabled {
     color: white !important;
 }
 
+/* Current Round */
 #current-round{
-    font-size: 2em;
-    font-weight: bold;
-    color: #fff;
-    background-color: #333;
-    padding: 10px;
-    border-radius: 5px;
-    margin: 20px 0;
-    text-align: center;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-}
-
-
-/* Ad-Box-2 Styling (Empty container for ads) */
-.Ad-Box-2 {
-    width: 300px; /* Set a fixed width for the ad box */
-    height: 200px; /* Adjust the height for the container */
-    background-color: #f2f2f2; /* Light gray background */
-    border-radius: 5px; /* Rounded corners */
-    border: 1px solid #ccc; /* Light border */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Light shadow */
-    display: flex;
-    justify-content: center; /* Center content inside (if you add ads) */
-    align-items: center; /* Center content vertically */
-    color: #333; /* Dark text color for any placeholder text */
-    font-size: 1.2em;
-    font-weight: bold;
+    font-size: 1.5em;
     text-align: center;
 }
-
-
-
-
 
 #teampos-needs {
     margin-top: 20px;
-    height: 50px;  /* Keep the height the same as in your original CSS */
+    height: 150px;  /* Keep the height the same as in your original CSS */
     border: 1px dashed #ccc;
     padding: 10px;
     background-color: #f9f9f9;
     display: flex;  /* Use flexbox to align items side by side */
-    gap: 5px;  /* Space between the boxes */
+    gap: 10px;  /* Space between the boxes */
 }
 
 /* New #needs-box styling for four even boxes */
 #needspos-box {
     display: flex;  /* Enable flexbox layout */
     flex: 1;  /* Allow it to take up available space */
-    gap: 5px;  /* Space between each box */
+    gap: 10px;  /* Space between each box */
 }
 
 #needspos-box div {
@@ -352,7 +342,7 @@ button:disabled {
 
 /* Optional: Change the background for each box */
 #needspos-box div:nth-child(1) {
-    background-color: #95dcf0;
+    background-color: #f4f7f8;
 }
 
 #needspos-box div:nth-child(2) {
@@ -360,23 +350,63 @@ button:disabled {
 }
 
 #needspos-box div:nth-child(3) {
-    background-color:#95dcf0;
+    background-color: #b5f7ca;
 }
 
 #needspos-box div:nth-child(4) {
-    
-    background-color: #95dcf0;
-       
-    
-   
+    max-height: 300px; /* You can adjust this height to suit your layout */
+    overflow-y: auto; /* Allows vertical scrolling */
+    background-color: #e8f4f8;
+    padding-right: 10px; /* Optional: Adds padding to the right of the box */
+    border-radius: 5px; /* Optional: Adds rounded corners to the box */
+}
+
+.Ad-box-2 {
+    width: 300px;        /* Set the width to 300px */
+    height: 250px;       /* Set the height to 300px */
+    background-color: #a2a6a8;  /* Background color */
+    padding-right: 10px; /* Optional: Add some padding */
+    border-radius: 5px;  /* Optional: Rounded corners */
+    border-color: #333;  /* Border color */
+    border: 1px solid #333;  /* Add a solid border for visibility */
 }
 
 
 
-#list-container{
-max-height: 800px; /* You can adjust this height to suit your layout */
-overflow-y: auto; /* Allows vertical scrolling */
-background-color: #e8f4f8;
-padding-right: 10px; /* Optional: Adds padding to the right of the box */
-border-radius: 5px; /* Optional: Adds rounded corners to the box */
+.teamsNews{
+    width: 300px;        /* Set the width to 300px */
+    height: 2500px;       
+    background-color: #a2a6a8;  /* Background color */
+    padding-right: 10px; /* Optional: Add some padding */
+    border-radius: 5px;  /* Optional: Rounded corners */
+    border-color: #333;  /* Border color */
+    border: 1px solid #333;  /* Add a solid border for visibility */
+}
+
+/* Ensure the header container spans the full width */
+.header-container {
+    display: flex;                /* Use flexbox */
+    justify-content: space-between; /* Distribute headers evenly */
+    width: 100%;                  /* Make it span the entire width */
+    padding: 20px;                /* Add some padding around the container */
+    background-color: #f0f0f0;    /* Optional: Light background color */
+}
+
+/* Style for the headers */
+.header-container h4 {
+    margin: 0;                    /* Remove any default margin */
+    font-size: 1.5em;             /* Adjust the font size */
+    font-weight: bold;            /* Make headers bold */
+    text-align: center;           /* Center-align the text */
+    flex: 1;                      /* Allow headers to grow and take equal space */
+    padding: 10px;                /* Add padding inside each header */
+}
+
+/* Optional: Style the headers to look distinct */
+.header-container h4:nth-child(odd) {
+    background-color: #e8f4f8; /* Light blue for odd headers */
+}
+
+.header-container h4:nth-child(even) {
+    background-color: #d0f7d8; /* Light green for even headers */
 }
