@@ -88,7 +88,6 @@ app.get('/getCoaches', (req, res) => {
 });
 
 // Function to extract coaches for a specific team
-// Function to extract coaches for a specific team
 function extractCoachesForTeam(data, team) {
     // Normalize the team input to lowercase and trim extra spaces
     const normalizedTeam = team.trim().toLowerCase();
@@ -194,6 +193,67 @@ app.get('/players', (req, res) => {
         res.json(rows);
     });
 });
+
+
+// Endpoint to get team news from teamReading.txt
+app.get('/teams-news', (req, res) => {
+    const teamName = req.query.team;
+    if (!teamName) {
+        return res.status(400).json({ error: 'Team name is required' });
+    }
+
+    fs.readFile(path.join(__dirname, 'teamReading.txt'), 'utf8', (err, data) => {
+        if (err) {
+            return res.status(500).json({ error: 'Failed to read file' });
+        }
+
+        console.log("File data:", data);  // Log raw data from the file
+
+        const teamsData = parseTeamData(data);
+        console.log("Parsed teams data:", teamsData);  // Log parsed teams data
+
+        const normalizedTeamName = teamName.trim().toLowerCase();
+        console.log("Team Name:", normalizedTeamName);  // Log normalized team name
+
+        const teamInfo = teamsData[normalizedTeamName];
+
+        if (teamInfo) {
+            res.json(teamInfo);
+        } else {
+            res.status(404).json({ error: 'Team not found' });
+        }
+    });
+});
+
+// Parse the team data from the text file
+function parseTeamData(data) {
+    const teams = {};
+    const teamsArr = data.split('\n\n'); // Split teams by two newlines, assuming each team block is separated by blank lines
+
+    teamsArr.forEach(teamData => {
+        const lines = teamData.split('\n');
+        const teamName = lines[0].trim().toLowerCase(); // Normalize the team name here as well
+        const teamInfo = {};
+
+        lines.slice(1).forEach(line => {
+            const [key, value] = line.split(':').map(str => str.trim());
+            if (key && value) {
+                // Normalize keys and assign values
+                const normalizedKey = key.toLowerCase().replace(/\s+/g, ''); // Normalize keys to lowercase
+                teamInfo[normalizedKey] = value;
+            }
+        });
+
+        teams[teamName] = {
+            name: teamName,
+            ...teamInfo
+        };
+    });
+
+    return teams;
+}
+
+
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);

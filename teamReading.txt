@@ -1,0 +1,10 @@
+tennessee titans
+owner: Amy Adams Strunk,
+stadium: Nissan Stadium,
+salarycap: $40M,
+freeagents: QB, WR, DE,
+signings: WR John Doe, DE Jane Smith,
+positionneeds: QB, WR, DB,
+news: Team signed John Doe as a WR,
+opinions: The Titans should focus on their quarterback position
+

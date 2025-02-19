@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('slow-speed').addEventListener('click', () => setSpeed('slow'));
     document.getElementById('medium-speed').addEventListener('click', () => setSpeed('medium'));
     document.getElementById('fast-speed').addEventListener('click', () => setSpeed('fast'));
+    
 });
 
 // Function to load teams into the team info column
@@ -65,7 +66,8 @@ function loadTeams() {
                     // Load the team positions from the loaded data
                     loadTeamPositionNeeds(team.name);
                     fetchCoachesForTeam(team.name);
-
+                     // Fetch team news
+                    fetchTeamNews(team.name);  // Fetch news for the selected team
                     // Highlight selected team
                     Array.from(document.querySelectorAll('.team-button')).forEach(item => {
                         if (item !== listItem) {
@@ -199,6 +201,47 @@ function displayCoaches(data) {
         coachesInfo.innerHTML = '<p>No coach data available.</p>';
     }
 }
+
+// Function to display team news in the UI
+function displayTeamNews(data) {
+    const newsList = document.getElementById('teamsNews');
+    newsList.innerHTML = ''; // Clear previous news
+
+    if (data) {
+        // Display all available data for the selected team
+        const teamInfoHTML = `
+            <h3>${data.name}</h3>
+            <p><strong>Owner:</strong> ${data.owner || 'No owner information available'}</p>
+            <p><strong>Stadium:</strong> ${data.stadium || 'No stadium information available'}</p>
+            <p><strong>Salary Cap:</strong> ${data.salarycap || 'No salary cap information available'}</p>
+            <p><strong>Free Agents:</strong> ${data.freeagents || 'No free agents listed'}</p>
+            <p><strong>Signings:</strong> ${data.signings || 'No signings available'}</p>
+            <p><strong>Position Needs:</strong> ${data.positionneeds || 'No position needs available'}</p>
+            <p><strong>News:</strong> ${data.news || 'No news available for this team'}</p>
+            <p><strong>Opinions:</strong> ${data.opinions || 'No opinions available'}</p>
+        `;
+
+        newsList.innerHTML = teamInfoHTML;
+    } else {
+        newsList.innerHTML = '<p>No news available for this team.</p>';
+    }
+}
+
+// Function to fetch team news from the backend and display it
+function fetchTeamNews(teamName) {
+    fetch(`/teams-news?team=${teamName}`)
+        .then(response => response.json())
+        .then(data => displayTeamNews(data))
+        .catch(error => console.error('Error fetching team news:', error));
+}
+
+// Example call to fetch news for 'team1'
+fetchTeamNews('selected-team');
+
+
+
+
+
 
 // Start Draft Logic
 function startDraft() {

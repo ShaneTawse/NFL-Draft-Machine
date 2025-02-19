@@ -87,13 +87,26 @@ h4 {
 
 /* Adjust the layout to have the team button list in one column and a second column beside it */
 #team-info {
-    flex: 1 1 50%;  /* Takes up half the screen */
+    display: flex;
+    flex-direction: column;  /* Stack team list and boxes vertically */
+    flex: 1; /* Ensures this section takes up available space */
+    gap: 20px; /* Space between team list and boxes */
 }
+
 
 #team-needs {
     flex: 1 1 50%;  /* Takes up the other half of the screen */
 }
 
+#additional-boxes {
+    display: flex;          /* Flexbox for the boxes */
+    flex-direction: row; /* Align boxes vertically */
+    gap: 10px;     
+    height: 150px;
+    border-color: #0f103e;
+    border-radius: 5px;
+    background-color: #b5f7ca;         /* Space between each box */
+}
 
 
 /* Position Filter Buttons */
@@ -136,7 +149,7 @@ h4 {
 
 /* Existing #team-needs styling */
 #team-needs {
-    margin-top: 20px;
+    margin-top: 1px;
     height: 150px;  /* Keep the height the same as in your original CSS */
     border: 1px dashed #ccc;
     padding: 10px;
@@ -381,6 +394,8 @@ button:disabled {
     border-radius: 5px;  /* Optional: Rounded corners */
     border-color: #333;  /* Border color */
     border: 1px solid #333;  /* Add a solid border for visibility */
+    align-items: center;
+    text-align: center;
 }
 
 /* Ensure the header container spans the full width */
@@ -388,7 +403,7 @@ button:disabled {
     display: flex;                /* Use flexbox */
     justify-content: space-between; /* Distribute headers evenly */
     width: 100%;                  /* Make it span the entire width */
-    padding: 20px;                /* Add some padding around the container */
+    padding: 5px;                /* Add some padding around the container */
     background-color: #f0f0f0;    /* Optional: Light background color */
 }
 
@@ -404,9 +419,9 @@ button:disabled {
 
 /* Optional: Style the headers to look distinct */
 .header-container h4:nth-child(odd) {
-    background-color: #e8f4f8; /* Light blue for odd headers */
+    background-color: #0f103e; /* Light blue for odd headers */
 }
 
 .header-container h4:nth-child(even) {
-    background-color: #d0f7d8; /* Light green for even headers */
+    background-color:  #0f103e; /* Light green for even headers */
 }
