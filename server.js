@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require('express'); 
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
@@ -31,7 +31,6 @@ let draftOrder = [];
 let teamList = [];
 let teamPositionNeeds = {};
 
-
 // Function to load the draft order from the file
 function loadDraftOrderSync() {
     try {
@@ -59,7 +58,6 @@ function loadTeamListSync() {
         console.error("Error reading the team list file:", err);
     }
 }
-
 
 // Route to get coaches for a specific team
 app.get('/getCoaches', (req, res) => {
@@ -124,7 +122,7 @@ function extractCoachesForTeam(data, team) {
     return coaches;
 }
 
-
+// Function to load the team position needs from the file
 function loadTeamPositionNeedsSync() {
     try {
         const data = fs.readFileSync(teamPositionNeedsFilePath, 'utf8');
@@ -145,7 +143,6 @@ function loadTeamPositionNeedsSync() {
         console.error("Error reading the team position needs file:", err);
     }
 }
-
 
 // Load the draft order, team list, and team position needs synchronously before starting the server
 loadDraftOrderSync();
@@ -195,7 +192,9 @@ app.get('/players', (req, res) => {
 });
 
 
-// Endpoint to get team news from teamReading.txt
+
+
+
 app.get('/teams-news', (req, res) => {
     const teamName = req.query.team;
     if (!teamName) {
@@ -209,49 +208,26 @@ app.get('/teams-news', (req, res) => {
 
         console.log("File data:", data);  // Log raw data from the file
 
-        const teamsData = parseTeamData(data);
-        console.log("Parsed teams data:", teamsData);  // Log parsed teams data
+        try {
+            const teamsData = JSON.parse(data);  // Parse the entire file as an array of team objects
+            console.log("Parsed teams data:", teamsData);  // Log parsed teams data
 
-        const normalizedTeamName = teamName.trim().toLowerCase();
-        console.log("Team Name:", normalizedTeamName);  // Log normalized team name
+            const normalizedTeamName = teamName.trim().toLowerCase();  // Normalize the team name
+            console.log("Normalized Team Name:", normalizedTeamName);  // Log normalized team name for debugging
 
-        const teamInfo = teamsData[normalizedTeamName];
+            const teamInfo = teamsData.find(team => team.name.toLowerCase() === normalizedTeamName); // Match normalized team name with parsed data
 
-        if (teamInfo) {
-            res.json(teamInfo);
-        } else {
-            res.status(404).json({ error: 'Team not found' });
+            if (teamInfo) {
+                res.json(teamInfo);
+            } else {
+                res.status(404).json({ error: 'Team not found' });
+            }
+        } catch (e) {
+            console.error("Error parsing JSON:", e);
+            res.status(500).json({ error: 'Error parsing team data from file' });
         }
     });
 });
-
-// Parse the team data from the text file
-function parseTeamData(data) {
-    const teams = {};
-    const teamsArr = data.split('\n\n'); // Split teams by two newlines, assuming each team block is separated by blank lines
-
-    teamsArr.forEach(teamData => {
-        const lines = teamData.split('\n');
-        const teamName = lines[0].trim().toLowerCase(); // Normalize the team name here as well
-        const teamInfo = {};
-
-        lines.slice(1).forEach(line => {
-            const [key, value] = line.split(':').map(str => str.trim());
-            if (key && value) {
-                // Normalize keys and assign values
-                const normalizedKey = key.toLowerCase().replace(/\s+/g, ''); // Normalize keys to lowercase
-                teamInfo[normalizedKey] = value;
-            }
-        });
-
-        teams[teamName] = {
-            name: teamName,
-            ...teamInfo
-        };
-    });
-
-    return teams;
-}
 
 
 

@@ -8,7 +8,6 @@ let originalPlayers = [];
 let currentPick = 0;
 let currentRound = 1;
 let draftStarted = false;
-let timer = 180; // 3 minutes in seconds
 let speed = 'medium'; // Default speed of drafting (slow, medium, fast)
 let teamPositions = {}; // Store team needs positions
 
@@ -236,7 +235,8 @@ function fetchTeamNews(teamName) {
 }
 
 // Example call to fetch news for 'team1'
-fetchTeamNews('selected-team');
+fetchTeamNews(selectedTeam.name);
+
 
 
 
@@ -264,7 +264,6 @@ function startDraft() {
     autoDraft();
 }
 
-// Draft a player
 function draftPlayer() {
     if (!selectedTeam || !selectedPlayer) {
         alert("Please select a team and a player to draft.");
@@ -311,13 +310,14 @@ function draftPlayer() {
             selectedPlayer = null;
 
             document.getElementById('draft-player').disabled = true;
-            currentPick++;
+            currentPick++;  // Increment currentPick BEFORE checking for round
 
             // Update team info with the current pick
             updateCurrentPick();
 
+            // Check if we need to increment the round
             if (currentPick % 32 === 0) {
-                currentRound++;
+                currentRound++; // Increment the round after 32 picks
                 document.getElementById('current-round').textContent = `Current Round: ${currentRound}`;
             }
 
@@ -327,6 +327,8 @@ function draftPlayer() {
     })
     .catch(error => console.error('Error during drafting:', error));
 }
+
+
 
 // Auto draft for CPU teams (only for non-user teams)
 function autoDraft() {
@@ -397,7 +399,7 @@ function updateCurrentPick() {
 function resetDraft() {
     draftStarted = false;
     currentPick = 0;
-
+    
     document.getElementById('start-draft').disabled = false;
     document.getElementById('draft-player').disabled = true;
     document.getElementById('team-info').style.display = 'block';
