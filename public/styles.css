@@ -108,16 +108,14 @@ max-height: fit-content;
 }
 
 /* Individual additional box styling */
-#additional-boxes .additional-box {
+ .additional-box {
     background-color: #e8f4f8;  /* Light background color for each box */
     border-radius: 5px;         /* Rounded corners */
     border: 1px solid #ccc;     /* Border around each box */
-    padding: 20px;              /* Padding inside the box */
+    padding: 5px;              /* Padding inside the box */
     text-align: center;         /* Center the text */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* Subtle shadow effect */
-    flex: 1 1 calc(25% - 10px); /* Each box takes up 25% of the available space minus gap */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* Subtle shadow effect */  
     
-    box-sizing: border-box;     /* Ensure padding and border are included in width calculation */
 }
 
 
@@ -195,6 +193,7 @@ max-height: fit-content;
 
 #needs-box div:nth-child(2) {
     background-color: #95dcf0;
+  
 }
 
 #needs-box div:nth-child(3) {
