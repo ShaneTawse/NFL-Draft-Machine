@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('slow-speed').addEventListener('click', () => setSpeed('slow'));
     document.getElementById('medium-speed').addEventListener('click', () => setSpeed('medium'));
     document.getElementById('fast-speed').addEventListener('click', () => setSpeed('fast'));
-    
+    document.getElementById("current-round").innerHTML = "Current Round: " + currentRound;
 });
 
 // Function to load teams into the team info column
@@ -275,6 +275,12 @@ function draftPlayer() {
         return;
     }
 
+    // Example logic to check if the round should be incremented
+    if (currentPick >= teams.length) {
+        currentPick = 0;
+        currentRound++;
+        document.getElementById('current-round').innerHTML = "Current Round: " + currentRound;
+    }
     const currentTeam = draftOrder[currentPick % draftOrder.length];
     if (currentTeam !== selectedTeam.name) {
         alert("It is not your turn to draft!");
@@ -357,6 +363,8 @@ function autoDraft() {
         setTimeout(() => autoDraft(), getDraftSpeed()); // Delay based on selected speed
     }
 }
+
+
 
 // Function to get draft speed
 function getDraftSpeed() {
