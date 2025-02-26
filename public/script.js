@@ -25,6 +25,42 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById("current-round").innerHTML = "Current Round: " + currentRound;
 });
 
+
+
+// Array of image sets for each box
+const images = [
+    ["Assets/pepsi-5152332_640.jpg", "Assets/pepsi-7226342_640.jpg", "Assets/woman-5987303_640.jpg"],  // Set for box 1
+    ["Assets/footwear-7042722_640.jpg", "Assets/nike-5578104_640.jpg", "Assets/shoes-5379215_640.jpg"], // Set for box 2
+    ["Assets/american-792121_640.jpg", "Assets/pizza-806087_640.jpg", "Assets/n66-bet-8692765_640.jpg"], // Set for box 3
+    ["Assets/apple-tv-7025964_640.jpg", "Assets/camera-1842202_640.jpg", "Assets/miniature-3365503_640.jpg"], // Set for box 4
+    ["Assets/beer-820011_640.jpg", "Assets/beach-1869523_640.jpg", "Assets/party-8790935_640.jpg"]  // Set for box 5
+];
+
+// Select all the image elements inside the .additional-boxs containers
+const boxes = document.querySelectorAll('.additional-boxs img');
+
+// Set up a counter for each box to track the current image
+let currentImageIndexes = [0, 0, 0, 0, 0];
+
+// Function to change the image of each box every 60 seconds
+function changeImages() {
+    // Loop through all boxes
+    boxes.forEach((box, index) => {
+        // Update the source of the image for this box
+        box.src = images[index][currentImageIndexes[index]];
+        
+        // Increment the counter for this box and loop back to 0 if we reach the end of the images array
+        currentImageIndexes[index] = (currentImageIndexes[index] + 1) % images[index].length;
+    });
+}
+
+// Call changeImages every 60 seconds (60000 milliseconds)
+setInterval(changeImages, 60000);
+
+// Optionally, you can call it immediately to start showing the first image instantly
+changeImages();
+
+
 // Function to load teams into the team info column
 function loadTeams() {
     fetch('/teams')

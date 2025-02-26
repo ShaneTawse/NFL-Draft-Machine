@@ -30,6 +30,23 @@ h4 {
     font-size: 0.5em;
 }
 
+h6 {
+    background-color: #333;
+    color: #fff;
+    text-align:center;
+    
+    font-size: 0.5em;
+
+}
+
+h6 {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    font-size: 0.5em;
+
+}
+
 .section {
     display: flex;
     gap: 5px;
@@ -448,14 +465,14 @@ button:disabled {
     background-color: #e8f4f8; /* Light background color for each box */
     border-radius: 5px;         /* Rounded corners */
     border: 1px solid #ccc;     /* Border around the box */
-    padding: 5px;              /* Padding inside the box */
+    padding: 2px;              /* Padding inside the box */
     text-align: center;         /* Center the text */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
     flex: 1;                    /* Allow the boxes to grow equally */
     flex-direction: column; /* Stack boxes vertically */
     display: flex;
     max-width: 20%;
-    max-height: 1565px;
+    max-height: 1570px;
 }
 
 /* Style for each individual box in the #additionals */
@@ -463,7 +480,7 @@ button:disabled {
     background-color: #e8f4f8;  /* Light background for each box */
     border-radius: 5px;         /* Rounded corners */
     border: 1px solid #ccc;     /* Border around each box */
-    padding: 20px;              /* Padding inside the box */
+    padding: 5px;              /* Padding inside the box */
     text-align: center;         /* Center the text */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* Subtle shadow effect */
     flex: 1 1 45%;              /* Each box will take up 45% of the width and grow equally */
