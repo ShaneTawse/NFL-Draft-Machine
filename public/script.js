@@ -300,6 +300,104 @@ function startDraft() {
     autoDraft();
 }
 
+// Filter players based on position
+function filterPlayers(event,position) {
+    const filteredPlayers = originalPlayers.filter(player => {
+        return player.position === position && !player.drafted;  // Only show undrafted players for the selected position
+    });
+
+    displayPlayers(filteredPlayers);  // Call displayPlayers to show the filtered players
+
+    // Prevent any draft process interruption on filtering
+    event.preventDefault();  // Prevents other actions (like interrupting auto-drafting)
+}
+
+// Show all undrafted players
+function showAllPlayers() {
+    const undraftedPlayers = originalPlayers.filter(player => !player.drafted);  // Get all undrafted players from the original list
+    displayPlayers(undraftedPlayers);  // Display all undrafted players
+}
+
+// Display players in the list (this is for the UI display only, not affecting the actual draft)
+function displayPlayers(playersToDisplay) {
+    const playerList = document.getElementById('player-list');
+    playerList.innerHTML = ''; // Clear the existing players
+
+    playersToDisplay.forEach(player => {
+        const playerButton = document.createElement('button');
+        playerButton.classList.add('player-button');
+        playerButton.textContent = `${player.rank}. ${player.prospect} (${player.position}, ${player.college})`;
+        playerButton.id = `player-${player.id}`;
+        playerList.appendChild(playerButton);
+
+        playerButton.addEventListener('click', () => {
+            if (selectedPlayer) {
+                document.getElementById(`player-${selectedPlayer.id}`).classList.remove('selected-player');
+            }
+            selectedPlayer = player;
+            playerButton.classList.add('selected-player');
+            document.getElementById('draft-player').disabled = false;
+        });
+    });
+}
+
+// To ensure draft order scrolling is not affected by player filters, modify the displayDraftOrder to scroll correctly when necessary:
+function displayDraftOrder() {
+    const draftOrderList = document.getElementById('draft-order-list');
+    draftOrderList.innerHTML = '';  // Clear previous draft order
+
+    draftOrder.forEach((team, index) => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${index + 1}. ${team}`;
+        draftOrderList.appendChild(listItem);
+    });
+
+    // Ensure scrolling works correctly
+    scrollDraftPicks();
+}
+
+// Function to scroll draft picks
+function scrollDraftPicks() {
+    const draftSection = document.getElementById('draft-order-list');
+    draftSection.scrollTop = draftSection.scrollHeight;  // Ensure the draft list keeps scrolling properly after each draft pick
+}
+
+// Ensure when a position filter is clicked, the draft order is unaffected
+const positionButtons = document.querySelectorAll('.position-btn');
+positionButtons.forEach(button => {
+    button.addEventListener('click', function(event) {
+        // We prevent the default scroll behavior if the buttons are causing any issue
+        event.preventDefault();
+    });
+});
+
+
+let draftedPlayers = [
+
+];
+
+let currentIndex = 0;
+
+// Function to update the ticker text
+function updateTicker() {
+    if (draftedPlayers.length === 0) return;
+    
+    document.getElementById("ticker").textContent = draftedPlayers[currentIndex];
+    
+    currentIndex = (currentIndex + 1) % draftedPlayers.length; // Loop back to start
+}
+
+// Function to simulate adding new picks
+function addPick() {
+    let pickNumber = draftedPlayers.length + 1;
+    let newPick = `${pickNumber}. Player ${pickNumber} - Pos - Team`;
+    draftedPlayers.push(newPick);
+    console.log("New pick added:", newPick);
+}
+
+// Start the ticker loop
+setInterval(updateTicker, 2000); // Updates every 2 seconds
+
 function draftPlayer() {
     if (!selectedTeam || !selectedPlayer) {
         alert("Please select a team and a player to draft.");
@@ -379,7 +477,20 @@ function autoDraft() {
     const currentTeam = draftOrder[currentPick % draftOrder.length];
     if (currentTeam !== selectedTeam.name) {
         // Only auto-draft for CPU teams
-        const randomPlayer = players[Math.floor(Math.random() * players.length)];
+
+        // Filter out undrafted players only based on the original list (ignores any filters like position)
+        const undraftedPlayers = originalPlayers.filter(player => !player.drafted);
+
+        // If there are no players left to draft, stop the process
+        if (undraftedPlayers.length === 0) {
+            console.log("No undrafted players left");
+            return;
+        }
+
+        // Pick a random player from the undrafted list
+        const randomPlayer = undraftedPlayers[Math.floor(Math.random() * undraftedPlayers.length)];
+
+        // Add the drafted player to the drafted list
         const draftedList = document.getElementById('drafted-list');
         const draftItem = document.createElement('li');
         draftItem.textContent = `${currentTeam} drafted ${randomPlayer.prospect}`;
@@ -388,9 +499,15 @@ function autoDraft() {
         // Scroll to the new draft pick
         scrollDraftPicks();
 
-        // Remove the drafted player from the list
-        document.getElementById(`player-${randomPlayer.id}`).remove();
+        // Mark the player as drafted and remove from the display
+        randomPlayer.drafted = true;
+
+        // Remove the drafted player from the players array (active list)
         players = players.filter(player => player.id !== randomPlayer.id);
+
+        // Also remove the player button from the UI
+        document.getElementById(`player-${randomPlayer.id}`).remove();
+
         currentPick++;
 
         updateCurrentPick();
@@ -399,6 +516,7 @@ function autoDraft() {
         setTimeout(() => autoDraft(), getDraftSpeed()); // Delay based on selected speed
     }
 }
+
 
 
 

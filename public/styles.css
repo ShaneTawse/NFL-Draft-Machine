@@ -33,15 +33,6 @@ h4 {
 h6 {
     background-color: #333;
     color: #fff;
-    text-align:center;
-    
-    font-size: 0.5em;
-
-}
-
-h6 {
-    background-color: #333;
-    color: #fff;
     text-align: center;
     font-size: 0.5em;
 
@@ -287,7 +278,7 @@ button:disabled {
 
 #drafted-list li {
     padding: 5px;
-    background-color: #d0d6d0;
+    background-color: #b3b6bd;
     border: 1px solid #3693ea;
     margin-bottom: 5px;
     border-radius: 5px;
@@ -301,9 +292,9 @@ button:disabled {
 
 /* On-clock team button */
 .on-clock {
-    color: rgb(0, 255, 247);
+    color: rgb(255, 0, 0);
     font-weight: bold;
-    background-color: #FFD700;
+    background-color: #2908e1;
 }
 
 /* Draft Order Container */
@@ -324,9 +315,10 @@ button:disabled {
 
 #draft-order-list li {
     padding: 10px;
-    background-color: #f2f2f2;
+    background-color: #9dc4ee;
     border-radius: 5px;
-    border: 1px solid #ccc;
+    border: 1px solid #2107e8;
+   
 }
 
 /* Player Buttons */
@@ -355,6 +347,7 @@ button:disabled {
 #current-round{
     font-size: 1.5em;
     text-align: center;
+    padding: 5px;
 }
 
 #teampos-needs {
@@ -484,4 +477,26 @@ button:disabled {
     text-align: center;         /* Center the text */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* Subtle shadow effect */
     flex: 1 1 45%;              /* Each box will take up 45% of the width and grow equally */
+}
+
+.ticker-container {
+    width: 100%;
+    overflow: hidden;
+    background: #000;
+    color: #fff;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    font-size: 18px;
+   
+}
+.ticker-text {
+    display: inline-block;
+    white-space: nowrap;
+    animation: ticker-scroll 10s linear infinite;
+}
+@keyframes ticker-scroll {
+    from { transform: translateX(100%); }
+    to { transform: translateX(-100%); }
 }
