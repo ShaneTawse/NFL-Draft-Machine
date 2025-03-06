@@ -12,7 +12,7 @@ const draftFilePath = 'Full 2025 NFL Draft Order.txt';
 const teamsFilePath = 'Teams List.md';
 const teamPositionNeedsFilePath = path.join(__dirname, 'Team Position Needs.txt');
 const coachesFilePath = path.join(__dirname, 'Coaches.txt');
-
+const playersFilePath = path.join(__dirname, 'Players.log');
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -144,6 +144,26 @@ function loadTeamPositionNeedsSync() {
     }
 }
 
+// Function to load players from the file
+function loadPlayersSync() {
+    try {
+        const data = fs.readFileSync(playersFilePath, 'utf8');
+        console.log('Raw file content:', data); // Log the raw file content
+
+        // Process the file content
+        const players = data.split('\n').slice(1).map((line, index) => {
+            const [rank, cng, prospect, college, p1, ht, wt, elig, dr] = line.split('\t');
+            return { id: index + 1, rank, cng, prospect, college, position: p1, ht, wt, elig, dr };
+        }).filter(player => player.prospect); // Filter out empty lines
+
+        console.log('Players loaded:', players);
+        return players;
+    } catch (err) {
+        console.error("Error reading the players file:", err);
+        return [];
+    }
+}
+
 // Load the draft order, team list, and team position needs synchronously before starting the server
 loadDraftOrderSync();
 loadTeamListSync();
@@ -182,18 +202,9 @@ app.get('/team-position-needs/:teamName', (req, res) => {
 });
 
 app.get('/players', (req, res) => {
-    db.all("SELECT * FROM players", (err, rows) => {
-        if (err) {
-            res.status(500).json({ error: err.message });
-            return;
-        }
-        res.json(rows);
-    });
+    const players = loadPlayersSync();
+    res.json(players);
 });
-
-
-
-
 
 app.get('/teams-news', (req, res) => {
     const teamName = req.query.team;
@@ -228,8 +239,6 @@ app.get('/teams-news', (req, res) => {
         }
     });
 });
-
-
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);

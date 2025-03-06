@@ -8,14 +8,16 @@ let originalPlayers = [];
 let currentPick = 0;
 let currentRound = 1;
 let draftStarted = false;
-let speed = 'medium'; // Default speed of drafting (slow, medium, fast)
+let speed = 'medium'; // Default speed of drafting 
 let teamPositions = {}; // Store team needs positions
 
+let roundData = []; // Holds data for the current round
+let currentIndex = 0; // Index for the ticker
 document.addEventListener('DOMContentLoaded', () => {
     loadTeams();
     loadPlayers();
     loadDraftOrder();
-
+    
     document.getElementById('draft-player').addEventListener('click', draftPlayer);
     document.getElementById('reset-draft').addEventListener('click', resetDraft);
     document.getElementById('start-draft').addEventListener('click', startDraft);
@@ -23,10 +25,24 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('medium-speed').addEventListener('click', () => setSpeed('medium'));
     document.getElementById('fast-speed').addEventListener('click', () => setSpeed('fast'));
     document.getElementById("current-round").innerHTML = "Current Round: " + currentRound;
+
+fetch('LeagueNews.md')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.text();
+    })
+    .then(markdown => {
+        const leagueNewsElement = document.getElementById('leagueNews');
+        if (leagueNewsElement) {
+            leagueNewsElement.innerHTML = marked.parse(markdown);
+        } else {
+            console.error('leagueNews element not found');
+        }
+    })
+    .catch(error => console.error('Error fetching league news:', error));
 });
-
-
-
 // Array of image sets for each box
 const images = [
     ["Assets/pepsi-5152332_640.jpg", "Assets/pepsi-7226342_640.jpg", "Assets/woman-5987303_640.jpg"],  // Set for box 1
@@ -57,7 +73,7 @@ function changeImages() {
 // Call changeImages every 60 seconds (60000 milliseconds)
 setInterval(changeImages, 60000);
 
-// Optionally, you can call it immediately to start showing the first image instantly
+// Call changeImages immediately to set the initial images
 changeImages();
 
 
@@ -156,6 +172,7 @@ function loadPlayers() {
             playerList.innerHTML = ''; // Clear any existing players
 
             players.forEach(player => {
+                player.drafted = player.drafted || false;
                 const playerButton = document.createElement('button');
                 playerButton.classList.add('player-button');
                 playerButton.textContent = `${player.rank}. ${player.prospect} (${player.position}, ${player.college})`;
@@ -196,6 +213,9 @@ function displayDraftOrder() {
         listItem.textContent = `${index + 1}. ${team}`;
         draftOrderList.appendChild(listItem);
     });
+
+    // Ensure scrolling works correctly
+    scrollDraftPicks();
 }
 
 const apiUrl = '/getCoaches';  // Define the URL for the coaches API
@@ -270,15 +290,6 @@ function fetchTeamNews(teamName) {
         .catch(error => console.error('Error fetching team news:', error));
 }
 
-// Example call to fetch news for 'team1'
-fetchTeamNews(selectedTeam.name);
-
-
-
-
-
-
-
 // Start Draft Logic
 function startDraft() {
     if (!selectedTeam) {
@@ -297,25 +308,43 @@ function startDraft() {
         .map((team, index) => ({ team, pickNumber: index }))
         .filter(entry => entry.team === selectedTeam.name);
 
+    const selectedPlayerButton = document.querySelector('.selected-player');
+    if (selectedPlayerButton) {
+        selectedPlayerButton.classList.remove('selected-player');
+    }
+
     autoDraft();
 }
 
-// Filter players based on position
-function filterPlayers(event,position) {
-    const filteredPlayers = originalPlayers.filter(player => {
-        return player.position === position && !player.drafted;  // Only show undrafted players for the selected position
-    });
+// Function to filter players based on the selected position (if using position filters)
+function filterPlayers(position) {
+    console.log(`Filtering players for position: ${position}`);
+    
+    // Filter the players based on the selected position and undrafted status
+    const filteredPlayers = players.filter(player => player.position.trim() === position.trim() && !player.drafted);
 
-    displayPlayers(filteredPlayers);  // Call displayPlayers to show the filtered players
+    // Log the filtered players for debugging
+    console.log(`Filtered players:`, filteredPlayers);
 
-    // Prevent any draft process interruption on filtering
-    event.preventDefault();  // Prevents other actions (like interrupting auto-drafting)
+    // Update the UI to display the filtered players
+    displayPlayers(filteredPlayers);
+
+    // Continue the draft if it was interrupted
+    if (draftStarted) {
+        setTimeout(() => autoDraft(), getDraftSpeed());
+    }
 }
 
 // Show all undrafted players
 function showAllPlayers() {
-    const undraftedPlayers = originalPlayers.filter(player => !player.drafted);  // Get all undrafted players from the original list
-    displayPlayers(undraftedPlayers);  // Display all undrafted players
+    // Filter undrafted players only from the active players list
+    const undraftedPlayers = players.filter(player => !player.drafted);
+    displayPlayers(undraftedPlayers);  // Display the undrafted players
+
+    // Continue the draft if it was interrupted
+    if (draftStarted) {
+        setTimeout(() => autoDraft(), getDraftSpeed());
+    }
 }
 
 // Display players in the list (this is for the UI display only, not affecting the actual draft)
@@ -332,7 +361,10 @@ function displayPlayers(playersToDisplay) {
 
         playerButton.addEventListener('click', () => {
             if (selectedPlayer) {
-                document.getElementById(`player-${selectedPlayer.id}`).classList.remove('selected-player');
+                const prevSelectedPlayerButton = document.getElementById(`player-${selectedPlayer.id}`);
+                if (prevSelectedPlayerButton) {
+                    prevSelectedPlayerButton.classList.remove('selected-player');
+                }
             }
             selectedPlayer = player;
             playerButton.classList.add('selected-player');
@@ -340,6 +372,18 @@ function displayPlayers(playersToDisplay) {
         });
     });
 }
+
+// Add event listeners to the filter buttons
+document.querySelectorAll('.position-btn').forEach(button => {
+    button.addEventListener('click', function(event) {
+        const position = event.target.getAttribute('data-position');
+        filterPlayers(position);
+        // Continue the draft if it was interrupted
+        if (draftStarted) {
+            setTimeout(() => autoDraft(), getDraftSpeed());
+        }
+    });
+});
 
 // To ensure draft order scrolling is not affected by player filters, modify the displayDraftOrder to scroll correctly when necessary:
 function displayDraftOrder() {
@@ -360,6 +404,8 @@ function displayDraftOrder() {
 function scrollDraftPicks() {
     const draftSection = document.getElementById('draft-order-list');
     draftSection.scrollTop = draftSection.scrollHeight;  // Ensure the draft list keeps scrolling properly after each draft pick
+    
+
 }
 
 // Ensure when a position filter is clicked, the draft order is unaffected
@@ -371,33 +417,50 @@ positionButtons.forEach(button => {
     });
 });
 
-
-let draftedPlayers = [
-
-];
-
-let currentIndex = 0;
-
 // Function to update the ticker text
 function updateTicker() {
-    if (draftedPlayers.length === 0) return;
-    
-    document.getElementById("ticker").textContent = draftedPlayers[currentIndex];
-    
-    currentIndex = (currentIndex + 1) % draftedPlayers.length; // Loop back to start
+    if (roundData.length === 0) {
+        document.getElementById("ticker").textContent = "Waiting for draft picks...";
+        return; // Return if no picks are available
+    }
+
+    let currentPick = roundData[currentIndex];
+    document.getElementById("ticker").textContent = `Round ${currentRound}: ${currentPick.pick}. ${currentPick.player} - ${currentPick.team}`;
+
+    // Increment the index to show the next pick
+    currentIndex = (currentIndex + 1) % roundData.length;
 }
 
 // Function to simulate adding new picks
-function addPick() {
-    let pickNumber = draftedPlayers.length + 1;
-    let newPick = `${pickNumber}. Player ${pickNumber} - Pos - Team`;
-    draftedPlayers.push(newPick);
-    console.log("New pick added:", newPick);
+function addPick(player, team) {
+    let pickNumber = draftPlayer.flat().length + 1; // Total number of picks made
+    let roundNumber = Math.ceil(pickNumber / 32); // Assuming 32 picks per round
+    let playerPick = { player: player, team: team, pick: pickNumber };
+
+    // If the round doesn't exist, create it
+    if (!draftPlayer[roundNumber - 1]) {
+        draftPlayer[roundNumber - 1] = [];
+    }
+
+    // Add player to the appropriate round
+    draftPlayer[roundNumber - 1].push(playerPick);
+
+    // Update roundData if we're on the current round
+    if (roundNumber === currentRound) {
+        roundData = draftPlayer[currentRound - 1];
+        currentIndex = roundData.length - 1; // Start from the last pick of the current round
+    }
+
+    console.log("New pick added:", playerPick);
+
+    // Trigger the ticker update manually after a pick
+    updateTicker(); 
 }
 
 // Start the ticker loop
 setInterval(updateTicker, 2000); // Updates every 2 seconds
 
+// Draft player function
 function draftPlayer() {
     if (!selectedTeam || !selectedPlayer) {
         alert("Please select a team and a player to draft.");
@@ -444,9 +507,17 @@ function draftPlayer() {
             // Scroll to the new draft pick
             scrollDraftPicks();
 
+            // Mark the player as drafted
+            selectedPlayer.drafted = true;
+
             // Remove the drafted player from the list
-            document.getElementById(`player-${selectedPlayer.id}`).remove();
-            players = players.filter(player => player.id !== selectedPlayer.id);
+            const playerButton = document.getElementById(`player-${selectedPlayer.id}`);
+            if (playerButton) {
+                playerButton.remove();
+            } else {
+                console.error(`Player button with ID player-${selectedPlayer.id} not found`);
+            }
+            players = players.filter(player => player.id !== selectedPlayer.id);  // Remove from active list
             selectedPlayer = null;
 
             document.getElementById('draft-player').disabled = true;
@@ -468,8 +539,6 @@ function draftPlayer() {
     .catch(error => console.error('Error during drafting:', error));
 }
 
-
-
 // Auto draft for CPU teams (only for non-user teams)
 function autoDraft() {
     if (currentPick >= draftOrder.length) return;
@@ -478,8 +547,8 @@ function autoDraft() {
     if (currentTeam !== selectedTeam.name) {
         // Only auto-draft for CPU teams
 
-        // Filter out undrafted players only based on the original list (ignores any filters like position)
-        const undraftedPlayers = originalPlayers.filter(player => !player.drafted);
+        // Filter out undrafted players only based on the players array (not originalPlayers)
+        const undraftedPlayers = players.filter(player => !player.drafted);
 
         // If there are no players left to draft, stop the process
         if (undraftedPlayers.length === 0) {
@@ -502,11 +571,16 @@ function autoDraft() {
         // Mark the player as drafted and remove from the display
         randomPlayer.drafted = true;
 
-        // Remove the drafted player from the players array (active list)
+        // Remove the drafted player from the active players array (players array)
         players = players.filter(player => player.id !== randomPlayer.id);
 
         // Also remove the player button from the UI
-        document.getElementById(`player-${randomPlayer.id}`).remove();
+        const playerButton = document.getElementById(`player-${randomPlayer.id}`);
+        if (playerButton) {
+            playerButton.remove();
+        } else {
+            console.error(`Player button with ID player-${randomPlayer.id} not found`);
+        }
 
         currentPick++;
 
@@ -516,9 +590,6 @@ function autoDraft() {
         setTimeout(() => autoDraft(), getDraftSpeed()); // Delay based on selected speed
     }
 }
-
-
-
 
 // Function to get draft speed
 function getDraftSpeed() {
@@ -572,5 +643,5 @@ function resetDraft() {
     loadTeams();
     loadPlayers();
     loadDraftOrder();
-    loadTeamPositions(); // Reload team positions
+    loadTeamPositionNeeds(); // Reload team positions
 }

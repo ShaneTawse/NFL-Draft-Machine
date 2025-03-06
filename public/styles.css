@@ -1,4 +1,4 @@
-/* General Styles */
+
 body {
     font-family: Arial, sans-serif;
     background-color: #aba7a7;
@@ -406,8 +406,6 @@ button:disabled {
     border-color: #333;  /* Border color */
     border: 1px solid #333;  /* Add a solid border for visibility */
 }
-
-
 
 .teamsNews{
     width: 300px;        /* Set the width to 300px */

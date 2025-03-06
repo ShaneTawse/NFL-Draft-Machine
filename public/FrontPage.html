@@ -3,115 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NFL Mock Draft</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>NFL Mock Draft 2025/2026 Season</title>
+    <link rel="stylesheet" href="styles2.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
-<body> 
+<body>
     <header>
-        Top Dog Draft 2025/2026
+        <img src="logo.png" alt="Top Dog Draft Board" class="logo">
+        <h1>Top Dog Draft Board 2025/2026 Season</h1>
     </header>
+    
+    <nav class="navbar">
+        <button class="nav-btn" onclick="window.location.href='/index.html';">Go to Draft</button>
+        <button class="nav-btn" onclick="window.location.href='/product.html';">Go to Product Page</button>
+        <button class="nav-btn" onclick="window.location.href='/depth-charts.html';">Depth Charts</button>
+    </nav>
 
-    <div class="section" id="draft-section">
-   
-        <div id="team-info">
-            <h2>League News</h2>
-            
-        </div>
+    <main class="content">
+        <!-- League Info Section -->
+        <section class="league-info">
+            <!-- Rumors Section -->
+            <section class="rumors">
+                <h2>Rumors</h2>
+                <ul id="rumors">
+                    <!-- Rumors will be dynamically loaded here -->
+                </ul>
+            </section>
 
-            <div id="additionals">
-                <div class="additional-boxs">
-                    <img src="Assets/pepsi-5152332_640.jpg" height="250" width="200" alt="PepsiSign">
-                    <h6>Product Link Here</h6>
+            <!-- League News Section -->
+            <section class="league-news">
+                <h3>League News</h3>
+                <div id="leagueNews">
+                    <!-- News items will be dynamically loaded here -->
                 </div>
-                <div class="additional-boxs">
-                <img src="Assets/footwear-7042722_640.jpg" height="250" width="200" alt="FootWear">
-                <h6>Product Link Here</h6>
-            </div>
-                <div class="additional-boxs">
-                    <img src="Assets/american-792121_640.jpg" height="250" width="200" alt="FoodAd">
-                    <h6>Product Link Here</h6>
-                </div>
-                <div class="additional-boxs">
-                    <img src="Assets/apple-tv-7025964_640.jpg" height="250" width="200" alt="SubscriptionTv">
-                    <h6>Product Link Here</h6>
-                </div>
-                <div class="additional-boxs">
-                    <img src="Assets/beer-820011_640.jpg" height="250" width="200" alt="BeerAd">
-                    <h6>Product Link Here</h6>
-                </div>
-            </div>
-           
-    <div class="teamsNews">
-        <h2>Draft News</h2>
-        <ul id="teamsNews">
-        </ul>
-    </div>             
+            </section>
+        </section>
 
-    <div id="additional-boxes">
-        <div class="additional-box">
-            <img src="Assets/ship-7140939_640.jpg" height="160" width="360" alt="VacationBooking">
-            <h6>Product Link Here</h6>
-        </div>
-        <div class="additional-box">
-        <video width="800" height="180"  controls autoplay loop muted>
-            <source src="Assets/BannnerAd.mp4" type="video/mp4">
-        </video>
-    </div>
-    </div>
-     
-    <div class="header-container">
-        <h4>Team Coaches</h4>
-        <h4>Advertisement</h4>
-        <h4>Trade Offers</h4>
-        <h4>Drafted Players</h4>
-    </div>
+        <!-- Additional Sections -->
+        <section class="additional-sections">
+            <section class="section1">
+                <h3>Section 1</h3>
+                <p>Content for section 1</p>
+            </section>
 
-            <div id="team-needs">            
-                <div id="needs-box">
-                    <div id = "coaches-info"><!-- Box 1 content goes here (Team Logo/Coaches) --></div>                   
-                    <div><video  height="130" width="270"    controls autoplay loop muted>
-                        <source src="Assets/TableSoccer.mp4" type="video/mp4">                      
-                       <!-- Box 2 content goes here (Ads) --></div>                   
-                    <div><!-- Box 3 content goes here (Trade Offers) --></div>                 
-                    <div id="selected-players-box"><!-- Box 4 content goes here (Selected Players) --></div>
-                </div>
-            </div>
-        
-        <div class="ticker-container">
-            <span id="ticker" class="ticker-text">Waiting for draft picks...</span>
-        </div>
-   <!-- Players Column -->
-<div id="players">
-    <h2>Coaching Changes</h2>
-  
-    </div>
-</div>
+            <section class="section2">
+                <h3>Section 2</h3>
+                <p>Content for section 2</p>
+            </section>
+        </section>
+    </main>
 
-        <!-- Draft Console Column -->
-        <div id="draft-content">
-            <h2>Rumours</h2>
-            
-            <div id="current-round">Current Round: 1</div>
-            <div id="button-container" class="button-container">
-             
-                <video width="330" height="240"  controls autoplay loop muted>
-                    <source src="Assets/FootballHelmet.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            </div>
+    <footer>
+        <p>&copy; 2025 Top Dog Draft Board. All Rights Reserved.</p>
+    </footer>
 
-                <h2>Team Needs</h2>              
-                <div id="teampos-needs">
-                    <div id="needspos-box">
-                        <div id="needspos-box-1" class="needspos-box hidden"></div>
-                        <div id="needspos-box-2" class="needspos-box hidden"></div>
-                        <div id="needspos-box-3" class="needspos-box hidden"></div>
-                        <div id="needspos-box-4" class="needspos-box hidden"></div>
-                </div>
-            </div>
-            
-    </div>
-</div>
     <script src="script.js"></script>
 </body>
 </html>

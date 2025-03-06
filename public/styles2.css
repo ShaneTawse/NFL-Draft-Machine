@@ -1,0 +1,117 @@
+/* Global styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    text-align: center;
+    background-color: #333;
+    color: white;
+    padding: 20px 0;
+}
+
+header .logo {
+    width: 100px;
+}
+
+nav.navbar {
+    text-align: center;
+    background-color: #444;
+    padding: 10px 0;
+}
+
+nav.navbar button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+nav.navbar button:hover {
+    background-color: #0056b3;
+}
+
+/* Main content layout */
+.content {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.league-info {
+    width: 48%;
+}
+
+.additional-sections {
+    width: 48%;
+}
+
+section h2, section h3 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Styling for Rumors and League News */
+.rumors, .league-news {
+    margin-bottom: 20px;
+    background-color: #ffffff;  /* New background for a cleaner look */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.rumors h2, .league-news h3 {
+    font-size: 1.5rem; /* Increase font size */
+    color: #444;      /* Slightly lighter color */
+    margin-bottom: 15px;
+}
+
+.rumors ul, .league-news ul {
+    margin-top: 10px;
+}
+
+.rumors li, .league-news li {
+    background-color: #f9f9f9;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;  /* Smooth hover transition */
+}
+
+.rumors li:hover, .league-news li:hover {
+    background-color: #007BFF; /* Highlight the item on hover */
+    color: white;
+    transform: translateY(-5px);  /* Lift effect on hover */
+}
+
+.rumors li a, .league-news li a {
+    text-decoration: none;
+    color: inherit;  /* Inherit color for links */
+}
+
+.rumors li a:hover, .league-news li a:hover {
+    text-decoration: underline;  /* Underline on hover */
+}
+
+/* Styling for Additional Sections */
+.additional-sections section {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;  /* Add border radius to additional sections */
+}
+
+/* Footer styling */
+footer {
+    text-align: center;
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+}
