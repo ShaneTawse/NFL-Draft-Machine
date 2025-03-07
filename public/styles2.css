@@ -57,7 +57,7 @@ section h2, section h3 {
 }
 
 /* Styling for Rumors and League News */
-.rumors, .league-news {
+.rumors, .League-news {
     margin-bottom: 20px;
     background-color: #ffffff;  /* New background for a cleaner look */
     padding: 20px;
@@ -65,17 +65,17 @@ section h2, section h3 {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.rumors h2, .league-news h3 {
+.rumors h2, .League-news h3 {
     font-size: 1.5rem; /* Increase font size */
     color: #444;      /* Slightly lighter color */
     margin-bottom: 15px;
 }
 
-.rumors ul, .league-news ul {
+.rumors ul, .League-news ul {
     margin-top: 10px;
 }
 
-.rumors li, .league-news li {
+.rumors li, .League-news li {
     background-color: #f9f9f9;
     margin: 10px 0;
     padding: 15px;
@@ -84,18 +84,18 @@ section h2, section h3 {
     transition: all 0.3s ease;  /* Smooth hover transition */
 }
 
-.rumors li:hover, .league-news li:hover {
+.rumors li:hover, .League-news li:hover {
     background-color: #007BFF; /* Highlight the item on hover */
     color: white;
     transform: translateY(-5px);  /* Lift effect on hover */
 }
 
-.rumors li a, .league-news li a {
+.rumors li a, .League-news li a {
     text-decoration: none;
     color: inherit;  /* Inherit color for links */
 }
 
-.rumors li a:hover, .league-news li a:hover {
+.rumors li a:hover, .League-news li a:hover {
     text-decoration: underline;  /* Underline on hover */
 }
 

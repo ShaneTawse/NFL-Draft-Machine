@@ -477,6 +477,7 @@ button:disabled {
     flex: 1 1 45%;              /* Each box will take up 45% of the width and grow equally */
 }
 
+/* Adjusting the container to hold multiple ticker items */
 .ticker-container {
     width: 100%;
     overflow: hidden;
@@ -487,14 +488,26 @@ button:disabled {
     bottom: 0;
     left: 0;
     font-size: 18px;
-   
 }
-.ticker-text {
-    display: inline-block;
+
+/* Create a wrapper for the scrolling items */
+#ticker-wrapper {
+    display: flex;
     white-space: nowrap;
-    animation: ticker-scroll 10s linear infinite;
+    animation: ticker-scroll 20s linear infinite; /* Increased duration for smoother scrolling */
 }
+
+/* Each ticker item (pick) */
+.ticker-item {
+    padding: 0 30px;
+    display: inline-block;
+}
+
 @keyframes ticker-scroll {
-    from { transform: translateX(100%); }
-    to { transform: translateX(-100%); }
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(-100%);
+    }
 }

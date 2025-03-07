@@ -11,6 +11,7 @@ let draftStarted = false;
 let speed = 'medium'; // Default speed of drafting 
 let teamPositions = {}; // Store team needs positions
 
+
 let roundData = []; // Holds data for the current round
 let currentIndex = 0; // Index for the ticker
 document.addEventListener('DOMContentLoaded', () => {
@@ -26,23 +27,53 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('fast-speed').addEventListener('click', () => setSpeed('fast'));
     document.getElementById("current-round").innerHTML = "Current Round: " + currentRound;
 
-fetch('LeagueNews.md')
+    fetch('LeagueNews.json')
     .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        return response.text();
+        return response.json(); // Parse the JSON content from the file
     })
-    .then(markdown => {
-        const leagueNewsElement = document.getElementById('leagueNews');
+    .then(data => {
+        console.log(data); // Log the JSON content to ensure it's correct
+        const leagueNewsElement = document.getElementById('LeagueNews'); // Use the correct id
         if (leagueNewsElement) {
-            leagueNewsElement.innerHTML = marked.parse(markdown);
+            // Display the news items (the array of strings)
+            leagueNewsElement.innerHTML = data.LeagueNews.map(item => `
+                <div class="news-item">
+                    <p>${item}</p>  <!-- Directly display the string -->
+                </div>
+            `).join('');
         } else {
-            console.error('leagueNews element not found');
+            console.error('LeagueNews element not found');
         }
     })
     .catch(error => console.error('Error fetching league news:', error));
 });
+
+fetch('rumors.json')
+.then(response => {
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    return response.json(); // Parse the JSON content from the file
+})
+.then(data => {
+    console.log(data); // Log the JSON content to ensure it's correct
+    const rumorsElement = document.getElementById('rumors'); // Use the correct id
+    if (rumorsElement) {
+        // Display the news items (the array of strings)
+        rumorsElement.innerHTML = data.rumors.map(item => `
+            <div class="news-item">
+                <p>${item}</p>  <!-- Directly display the string -->
+            </div>
+        `).join('');
+    } else {
+        console.error('Roumors element not found');
+    }
+})
+.catch(error => console.error('Error fetching Rumors:', error));
+
 // Array of image sets for each box
 const images = [
     ["Assets/pepsi-5152332_640.jpg", "Assets/pepsi-7226342_640.jpg", "Assets/woman-5987303_640.jpg"],  // Set for box 1
@@ -76,69 +107,107 @@ setInterval(changeImages, 60000);
 // Call changeImages immediately to set the initial images
 changeImages();
 
+// Function to load team colors from the teamColors.txt
+function loadTeamColors() {
+    return fetch('/teamColors.json')  // Fetch the team colors file
+        .then(res => res.json())  // Parse the JSON content from the file
+        .then(data => data)       // Return the team colors object
+        .catch(error => {
+            console.error('Error loading team colors:', error);
+            return {};  // Return empty object if there's an error
+        });
+}
 
 // Function to load teams into the team info column
 function loadTeams() {
-    fetch('/teams')
-        .then(res => res.json())
-        .then(data => {
-            teams = data;
-            const teamList = document.getElementById('team-list');
-            teamList.innerHTML = ''; // Clear the existing list
+    loadTeamColors().then(teamColors => {
+        fetch('/teams')
+            .then(res => res.json())
+            .then(data => {
+                teams = data;
+                const teamList = document.getElementById('team-list');
+                teamList.innerHTML = ''; // Clear the existing list
 
-            teams.forEach((team, index) => {
-                const listItem = document.createElement('li');
-                listItem.textContent = `${index + 1}. ${team.name}`;
-                listItem.id = `team-${team.id}`;
-                listItem.classList.add('team-button'); // Add a class for button styling
-                listItem.style.backgroundColor = team.color || "#007BFF"; // Assuming you have a color property
-                teamList.appendChild(listItem);
+                teams.forEach((team, index) => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${index + 1}. ${team.name}`;
+                    listItem.id = `team-${team.id}`;
+                    listItem.classList.add('team-button'); // Add a class for button styling
+                    
+                    // Use team color from the loaded colors file (or default to blue)
+                    const teamColor = teamColors[team.name] || "#007BFF"; // Default to blue if no color found
+                    listItem.style.backgroundColor = teamColor;
+                    
+                    teamList.appendChild(listItem);
 
-                // Hover effect: Darken color
-                listItem.addEventListener('mouseenter', () => {
-                    listItem.style.backgroundColor = darkenColor(listItem.style.backgroundColor);
-                });
+                    // Hover effect: Darken color
+                    listItem.addEventListener('mouseenter', () => {
+                        listItem.style.backgroundColor = darkenColor(listItem.style.backgroundColor);
+                    });
 
-                listItem.addEventListener('mouseleave', () => {
-                    listItem.style.backgroundColor = team.color || "#007BFF";
-                });
+                    listItem.addEventListener('mouseleave', () => {
+                        listItem.style.backgroundColor = teamColor;
+                    });
 
-                // Event listener for when a user selects a team
-                listItem.addEventListener('click', () => {
-                    if (draftStarted) return alert("Draft already started!");
-                    selectedTeam = team;
+                    // Event listener for when a user selects a team
+                    listItem.addEventListener('click', () => {
+                        if (draftStarted) return alert("Draft already started!");
+                        selectedTeam = team;
 
-                    document.getElementById('selected-team').textContent = `Selected Team: ${team.name}`;
-                    document.getElementById('start-draft').disabled = false; // Enable start draft button
+                        document.getElementById('selected-team').textContent = `Selected Team: ${team.name}`;
+                        document.getElementById('start-draft').disabled = false; // Enable start draft button
 
-                    // Change background color to green upon selection
-                    listItem.style.backgroundColor = "green";
+                        // Change background color to green upon selection
+                        listItem.style.backgroundColor = "green";
 
-                    // Load the team positions from the loaded data
-                    loadTeamPositionNeeds(team.name);
-                    fetchCoachesForTeam(team.name);
-                     // Fetch team news
-                    fetchTeamNews(team.name);  // Fetch news for the selected team
-                    // Highlight selected team
-                    Array.from(document.querySelectorAll('.team-button')).forEach(item => {
-                        if (item !== listItem) {
-                            item.style.backgroundColor = team.color || "#007BFF"; // Reset the color for unselected teams
-                        }
+                        // Load the team positions from the loaded data
+                        loadTeamPositionNeeds(team.name);
+                        fetchCoachesForTeam(team.name);
+                        // Fetch team news
+                        fetchTeamNews(team.name);  // Fetch news for the selected team
+                        // Highlight selected team
+                        Array.from(document.querySelectorAll('.team-button')).forEach(item => {
+                            if (item !== listItem) {
+                                item.style.backgroundColor = teamColor; // Reset the color for unselected teams
+                            }
+                        });
                     });
                 });
-            });
-        })
-        .catch(error => console.error('Error fetching team list:', error));
+            })
+            .catch(error => console.error('Error fetching team list:', error));
+    });
 }
 
-// Helper function to darken the color
+// Utility function to darken a color (for hover effect)
 function darkenColor(color) {
-    const rgb = color.match(/\d+/g).map(Number);
-    rgb[0] = Math.max(rgb[0] - 30, 0);
-    rgb[1] = Math.max(rgb[1] - 30, 0);
-    rgb[2] = Math.max(rgb[2] - 30, 0);
-    return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+    // This function darkens the color by reducing its brightness
+    const rgb = hexToRgb(color);
+    if (!rgb) return color;
+
+    const darkened = {
+        r: Math.max(0, rgb.r - 30),
+        g: Math.max(0, rgb.g - 30),
+        b: Math.max(0, rgb.b - 30)
+    };
+
+    return rgbToHex(darkened.r, darkened.g, darkened.b);
 }
+
+// Utility function to convert hex color to RGB
+function hexToRgb(hex) {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+}
+
+// Utility function to convert RGB to hex
+function rgbToHex(r, g, b) {
+    return "#" + ((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1).toUpperCase();
+}
+
 
 // Load the positions for the selected team
 function loadTeamPositionNeeds(teamName) {
@@ -417,48 +486,64 @@ positionButtons.forEach(button => {
     });
 });
 
-// Function to update the ticker text
+
 function updateTicker() {
-    if (roundData.length === 0) {
-        document.getElementById("ticker").textContent = "Waiting for draft picks...";
-        return; // Return if no picks are available
+    const tickerWrapper = document.getElementById("ticker-wrapper");
+
+    // Flatten `roundData` to get all picks in one array
+    let allPicks = roundData.flat();
+
+    // If no picks exist, show the waiting message
+    if (allPicks.length === 0) {
+        tickerWrapper.innerHTML = "<span class='ticker-item'>Waiting for draft picks...</span>";
+        return;
     }
 
-    let currentPick = roundData[currentIndex];
-    document.getElementById("ticker").textContent = `Round ${currentRound}: ${currentPick.pick}. ${currentPick.player} - ${currentPick.team}`;
+    // Get the current pick
+    let currentPick = allPicks[currentIndex];
 
-    // Increment the index to show the next pick
-    currentIndex = (currentIndex + 1) % roundData.length;
+    // Check if pick data is valid
+    if (!currentPick || !currentPick.pick || !currentPick.player || !currentPick.team) {
+        console.error("Current pick data is missing or incomplete:", currentPick);
+        tickerWrapper.innerHTML = "<span class='ticker-item'>Error: Invalid pick data</span>";
+        return;
+    }
+
+    // Create ticker item
+    const tickerItem = document.createElement('span');
+    tickerItem.classList.add('ticker-item');
+    tickerItem.textContent = `Pick ${currentPick.pick}: ${currentPick.player} - ${currentPick.team}`;
+
+    // Clear and append new content
+    tickerWrapper.innerHTML = ''; 
+    tickerWrapper.appendChild(tickerItem);
+
+    // Move to the next pick
+    currentIndex = (currentIndex + 1) % allPicks.length;
 }
 
-// Function to simulate adding new picks
+let tickerStarted = false;
+
 function addPick(player, team) {
-    let pickNumber = draftPlayer.flat().length + 1; // Total number of picks made
-    let roundNumber = Math.ceil(pickNumber / 32); // Assuming 32 picks per round
-    let playerPick = { player: player, team: team, pick: pickNumber };
+    let totalPicks = roundData.flat().length + 1;
+    let roundNumber = Math.ceil(totalPicks / 32);
+    let playerPick = { player, team, pick: totalPicks };
 
-    // If the round doesn't exist, create it
-    if (!draftPlayer[roundNumber - 1]) {
-        draftPlayer[roundNumber - 1] = [];
+    if (!roundData[roundNumber - 1]) {
+        roundData[roundNumber - 1] = [];
     }
+    roundData[roundNumber - 1].push(playerPick);
 
-    // Add player to the appropriate round
-    draftPlayer[roundNumber - 1].push(playerPick);
-
-    // Update roundData if we're on the current round
-    if (roundNumber === currentRound) {
-        roundData = draftPlayer[currentRound - 1];
-        currentIndex = roundData.length - 1; // Start from the last pick of the current round
-    }
+    currentIndex = roundData.flat().length - 1;
 
     console.log("New pick added:", playerPick);
+    updateTicker();
 
-    // Trigger the ticker update manually after a pick
-    updateTicker(); 
+    if (!tickerStarted) {
+        setInterval(updateTicker, 2000);
+        tickerStarted = true;
+    }
 }
-
-// Start the ticker loop
-setInterval(updateTicker, 2000); // Updates every 2 seconds
 
 // Draft player function
 function draftPlayer() {
@@ -532,6 +617,8 @@ function draftPlayer() {
                 document.getElementById('current-round').textContent = `Current Round: ${currentRound}`;
             }
 
+                 // Add the drafted player to the roundData array
+                 //addPick(selectedPlayer.prospect, selectedTeam.name);
             // Auto draft for CPU teams
             autoDraft();
         }
