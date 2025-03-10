@@ -13,7 +13,8 @@ const teamsFilePath = 'Teams List.md';
 const teamPositionNeedsFilePath = path.join(__dirname, 'Team Position Needs.txt');
 const coachesFilePath = path.join(__dirname, 'Coaches.txt');
 const playersFilePath = path.join(__dirname, 'Players.log');
-
+const LeagueNewsFilePath = path.join(__dirname, '/LeagueNews.json');
+const rumorsFilePath = path.join(__dirname, '/rumors.json');
 app.use(bodyParser.json());
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
