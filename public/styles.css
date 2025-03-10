@@ -1,4 +1,3 @@
-
 body {
     font-family: Arial, sans-serif;
     background-color: #aba7a7;
@@ -475,7 +474,21 @@ button:disabled {
     text-align: center;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: large;
-    color: black
+    color: black;
+}
+
+#teamImageContainer {
+    margin-top: 10px;
+}
+
+#teamImage {
+    background-color: #e8f4f8;  /* Light background for each box */
+    border-radius: 5px;         /* Rounded corners */
+    border: 1px solid #ccc;     /* Border around each box */
+    padding: 5px;              /* Padding inside the box */
+    text-align: center;         /* Center the text */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* Subtle shadow effect */
+    flex: 1 1 45%;              /* Each box will take up 45% of the width and grow equally */
     
 }
 

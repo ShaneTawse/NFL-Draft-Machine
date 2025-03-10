@@ -23,17 +23,50 @@ nav.navbar {
     padding: 10px 0;
 }
 
-nav.navbar button {
-    margin: 0 10px;
-    padding: 10px 20px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
+.nav-btn {
+    background-color: #0078d0;
+    border: 0;
+    border-radius: 56px;
+    color: #fff;
     cursor: pointer;
+    display: inline-block;
+    font-family: system-ui, -apple-system, system-ui, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    outline: 0;
+    padding: 16px 21px;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    transition: all .3s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
 }
 
-nav.navbar button:hover {
-    background-color: #0056b3;
+.nav-btn:before {
+    background-color: initial;
+    background-image: linear-gradient(#fff 0, rgba(255, 255, 255, 0) 100%);
+    border-radius: 125px;
+    content: "";
+    height: 50%;
+    left: 4%;
+    opacity: .5;
+    position: absolute;
+    top: 0;
+    transition: all .3s;
+    width: 92%;
+}
+
+.nav-btn:hover {
+    box-shadow: rgba(255, 255, 255, .2) 0 3px 15px inset, rgba(0, 0, 0, .1) 0 3px 5px, rgba(0, 0, 0, .1) 0 10px 13px;
+    transform: scale(1.05);
+}
+
+@media (min-width: 768px) {
+    .nav-btn {
+        padding: 16px 48px;
+    }
 }
 
 /* Main content layout */
@@ -41,77 +74,88 @@ nav.navbar button:hover {
     display: flex;
     justify-content: space-between;
     padding: 20px;
+    flex-wrap: wrap;  /* Allow wrapping */
+    gap: 10px; /* Reduce space between columns */
 }
 
-.league-info {
-    width: 48%;
+/* Adjusting width for all four sections to be side-by-side */
+.league-news,
+.rumors,
+.freeAgents,
+.signings {
+    width: 23%; /* Each section takes up about 1/4 of the total width */
+    padding: 10px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 0; /* Remove any extra margin */
 }
 
-.additional-sections {
-    width: 48%;
-}
-
+/* Section title styling */
 section h2, section h3 {
     color: #333;
     margin-bottom: 10px;
+    font-size: 1.5rem;
 }
 
-/* Styling for Rumors and League News */
-.rumors, .League-news {
-    margin-bottom: 20px;
-    background-color: #ffffff;  /* New background for a cleaner look */
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.rumors h2, .League-news h3 {
-    font-size: 1.5rem; /* Increase font size */
-    color: #444;      /* Slightly lighter color */
+/* Styling for the content inside each section */
+.league-news h3, .rumors h2, .freeAgents h3, .signings h3 {
+    font-size: 1.5rem;
+    color: #444;
     margin-bottom: 15px;
 }
 
-.rumors ul, .League-news ul {
-    margin-top: 10px;
+/* Styling for lists inside Rumors and League News */
+.league-news ul, .rumors ul {
+    list-style-type: none;
+    padding: 0;
 }
 
-.rumors li, .League-news li {
-    background-color: #f9f9f9;
+.league-news li, .rumors li, .freeAgents div, .signings div {
+    background-color: #e3f2fd;
+    color: #0069c0;
     margin: 10px 0;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;  /* Smooth hover transition */
+    padding: 5px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out;
 }
 
-.rumors li:hover, .League-news li:hover {
-    background-color: #007BFF; /* Highlight the item on hover */
+/* Hover effect for news and rumors */
+.league-news li:hover, .rumors li:hover, .freeAgents div:hover, .signings div:hover {
+    background-color: hwb(182 52% 20%);
     color: white;
-    transform: translateY(-5px);  /* Lift effect on hover */
+    transform: translateY(-5px);
 }
 
-.rumors li a, .League-news li a {
+.league-news li a, .rumors li a, .freeAgents a, .signings a {
     text-decoration: none;
-    color: inherit;  /* Inherit color for links */
+    color: inherit;
 }
 
-.rumors li a:hover, .League-news li a:hover {
-    text-decoration: underline;  /* Underline on hover */
+.league-news li a:hover, .rumors li a:hover, .freeAgents a:hover, .signings a:hover {
+    text-decoration: underline;
 }
 
-/* Styling for Additional Sections */
-.additional-sections section {
-    background-color: #fff;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;  /* Add border radius to additional sections */
+/* Responsive Styling */
+@media (max-width: 1024px) {
+    .league-news,
+    .rumors,
+    .freeAgents,
+    .signings {
+        width: 48%; /* Adjust width for tablet/medium screens */
+    }
 }
 
-/* Footer styling */
-footer {
-    text-align: center;
-    background-color: #333;
-    color: white;
-    padding: 10px 0;
+@media (max-width: 768px) {
+    .content {
+        flex-direction: column; /* Stack the sections vertically on small screens */
+    }
+    .league-news,
+    .rumors,
+    .freeAgents,
+    .signings {
+        width: 100%; /* Each section takes up full width on mobile */
+        margin-bottom: 20px;
+    }
 }

@@ -285,6 +285,7 @@ function displayCoaches(data) {
 // Function to display team news in the UI
 function displayTeamNews(data) {
     const newsList = document.getElementById('teamsNews');
+    const teamImage = document.getElementById('teamImage');
     newsList.innerHTML = ''; // Clear previous news
 
     if (data) {
@@ -302,8 +303,17 @@ function displayTeamNews(data) {
         `;
 
         newsList.innerHTML = teamInfoHTML;
+
+        // Update the team image
+        if (data.image) {
+            teamImage.src = data.image;
+            teamImage.style.display = 'block';
+        } else {
+            teamImage.style.display = 'none';
+        }
     } else {
         newsList.innerHTML = '<p>No news available for this team.</p>';
+        teamImage.style.display = 'none';
     }
 }
 
