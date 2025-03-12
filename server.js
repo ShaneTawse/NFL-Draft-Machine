@@ -13,10 +13,13 @@ const teamsFilePath = 'Teams List.md';
 const teamPositionNeedsFilePath = path.join(__dirname, 'Team Position Needs.txt');
 const coachesFilePath = path.join(__dirname, 'Coaches.txt');
 const playersFilePath = path.join(__dirname, 'Players.log');
+app.use('/Assets', express.static(path.join(__dirname, 'public/Assets/team_images')));
+
 
 app.use(bodyParser.json());
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
+
 
 const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {

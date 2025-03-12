@@ -282,7 +282,19 @@ function displayCoaches(data) {
     }
 }
 
-// Function to display team news in the UI
+// Function to check if the image exists in the folder (async approach)
+function checkIfImageExists(imagePath, callback) {
+    const img = new Image();
+    img.onload = function() {
+        callback(true);  // Image loaded successfully
+    };
+    img.onerror = function() {
+        callback(false);  // Error loading image (image does not exist)
+    };
+    img.src = imagePath;  // Start loading the image
+}
+
+// Modified displayTeamNews function
 function displayTeamNews(data) {
     const newsList = document.getElementById('teamsNews');
     const teamImage = document.getElementById('teamImage');
@@ -302,20 +314,31 @@ function displayTeamNews(data) {
             <p><strong>Opinions:</strong> ${data.opinions || 'No opinions available'}</p>
         `;
 
+        // Add the team info HTML to the news list
         newsList.innerHTML = teamInfoHTML;
 
-        // Update the team image
-        if (data.image) {
-            teamImage.src = data.image;
-            teamImage.style.display = 'block';
-        } else {
-            teamImage.style.display = 'none';
-        }
+        // Extract the last name from the team name (e.g., "Tampa Bay Buccaneers" -> "Buccaneers")
+        const teamNameParts = data.name.split(' ');
+        const lastName = teamNameParts[teamNameParts.length - 1];
+
+        // Construct the image path for the team using its last name
+        const imagePath = '/Assets/team_images/' + lastName + '.png';  // Assuming images are named "Buccaneers.png" etc.
+
+        // Check if the image exists asynchronously
+        checkIfImageExists(imagePath, function(imageExists) {
+            if (imageExists) {
+                teamImage.src = imagePath;
+            } else {
+                teamImage.src = '/Assets/team_images/ProLeague.jpeg';  // Fallback image if no image for the team is found
+            }
+        });
     } else {
         newsList.innerHTML = '<p>No news available for this team.</p>';
-        teamImage.style.display = 'none';
+        teamImage.src = '/Assets/team_images/ProLeague.jpeg';  // Default image if no data
     }
 }
+
+
 
 // Function to fetch team news from the backend and display it
 function fetchTeamNews(teamName) {
